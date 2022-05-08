@@ -43,8 +43,8 @@ export const Auth = () => {
         <Menu.Items className="absolute z-20 right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-300 border rounded grid ring-1 ring-black ring-opacity-5 focus:outline-none">
           {[
             {
-              href: "/u",
-              children: "Dashboard",
+              href: "/",
+              children: "Home",
             },
             {
               href: "/create",
