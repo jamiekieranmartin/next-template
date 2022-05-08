@@ -54,6 +54,7 @@ export default function middleware(req: NextRequest) {
 
     if (
       domain === "localhost" ||
+      hostname === "jamiekieranmartin.app" ||
       hostname === "next-jamiekieranmartin.vercel.app"
     ) {
       url.pathname = `/home`;
