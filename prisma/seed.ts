@@ -3,21 +3,35 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const data = await prisma.team.create({
+  const user_id = "cl2x5u4130010tsvp8lgsdbj7";
+
+  const team = await prisma.team.create({
     data: {
-      slug: "my-team",
+      domain: "my-team",
       name: "My Team",
       members: {
         create: {
-          user_id: "ckzzhoxsx0006ozvpfekkdfz9",
+          user_id,
+          accepted: true,
+          role: "OWNER",
         },
       },
     },
   });
 
-  await prisma.team.delete({
+  await prisma.team.update({
     where: {
-      id: data.id,
+      id: team.id,
+    },
+    data: {
+      stripe_account: {
+        create: {
+          stripe_id: "acct_1Kx74BRLefo8ZISq",
+          default_currency: "aud",
+          charges_enabled: true,
+          payouts_enabled: true,
+        },
+      },
     },
   });
 }

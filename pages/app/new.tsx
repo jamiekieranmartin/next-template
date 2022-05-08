@@ -1,6 +1,6 @@
 import { useForm, zodResolver } from "@mantine/form";
 import { useEffect } from "react";
-import { slugify } from "../../lib/utils";
+import { domainify } from "../../lib/utils";
 import { NextAuthPage } from "../../lib/types";
 import { trpc } from "../../lib/trpc";
 import { Button, Input, Layout, Form } from "../../components";
@@ -12,7 +12,7 @@ const Page: NextAuthPage = () => {
 
   const form = useForm({
     initialValues: {
-      slug: "",
+      domain: "",
       name: "",
     },
     schema: zodResolver(team_create),
@@ -22,12 +22,12 @@ const Page: NextAuthPage = () => {
   const mutation = trpc.useMutation(["team.create"], {
     onSuccess(input) {
       utils.invalidateQueries(["team.list"]);
-      router.push(`/${input.slug}`);
+      router.push(`/${input.domain}`);
     },
   });
 
   useEffect(() => {
-    form.setFieldValue("slug", slugify(form.values.name));
+    form.setFieldValue("domain", domainify(form.values.name));
   }, [form.values.name]);
 
   return (
@@ -35,7 +35,7 @@ const Page: NextAuthPage = () => {
       isLoading={mutation.isLoading}
       onSubmit={form.onSubmit((values) => mutation.mutate(values))}
     >
-      <h2 className="col-span-2">Create a Team</h2>
+      <h2 className="text-xl font-bold col-span-2">Create a new team</h2>
 
       <Input
         type="text"
@@ -51,9 +51,9 @@ const Page: NextAuthPage = () => {
         type="text"
         required
         placeholder="my-team"
-        description={`www.domain.com/${form.values.slug || "my-team"}`}
-        onBlur={() => form.validateField("slug")}
-        {...form.getInputProps("slug")}
+        description={`${form.values.domain || "my-team"}.jamiekieranmartin.app`}
+        onBlur={() => form.validateField("domain")}
+        {...form.getInputProps("domain")}
       >
         Team Slug
       </Input>

@@ -5,6 +5,8 @@ import { signIn, signOut } from "next-auth/react";
 import { Avatar, Button, Link } from ".";
 import { useRouter } from "next/router";
 
+const dev = process.env.NODE_ENV === "development";
+
 export const Auth = () => {
   const user = trpc.useQuery(["user.get"], {
     refetchInterval: false,
@@ -16,10 +18,10 @@ export const Auth = () => {
   if (!user.data)
     return (
       <div className="flex gap-4">
-        <Button size="sm" onClick={() => signIn()}>
+        <Button size="sm" onClick={() => signIn("github")}>
           Sign in
         </Button>
-        <Button size="sm" onClick={() => signIn()}>
+        <Button size="sm" onClick={() => signIn("github")}>
           Sign up
         </Button>
       </div>
@@ -47,8 +49,8 @@ export const Auth = () => {
               children: "Home",
             },
             {
-              href: "/create",
-              children: "Create a Team",
+              href: "/new",
+              children: "New Team",
             },
             { href: "/invitations", children: "Invitations" },
             { href: "/settings", children: "Settings" },
@@ -89,7 +91,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = ({
   children,
 }) => {
   const router = useRouter();
-  const slug = String(router.query.slug ?? "");
+  const domain = String(router.query.domain ?? "");
 
   return (
     <>
@@ -99,11 +101,11 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = ({
             <h1 className="text-lg font-medium border rounded-full w-12 h-12"></h1>
           </Link>
 
-          {slug ? (
+          {domain ? (
             <>
               <Divider />
-              <Link href={`/${slug}`}>
-                <h1 className="text-lg font-medium">{slug}</h1>
+              <Link href={`/${domain}`}>
+                <h1 className="text-lg font-medium">{domain}</h1>
               </Link>
             </>
           ) : null}

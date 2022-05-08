@@ -37,12 +37,12 @@ const MemberForm = ({ team_id }: { team_id: string }) => {
       isLoading={mutation.isLoading}
       onSubmit={form.onSubmit((values) => mutation.mutate(values))}
     >
-      <h2 className="col-span-2">Invite a Member</h2>
+      <h2 className="text-xl font-bold col-span-2">Invite a Member</h2>
 
       <Input
         type="text"
         required
-        placeholder="jamie@dono.io"
+        placeholder="jamie@gmail.com"
         onBlur={() => form.validateField("email")}
         {...form.getInputProps("email")}
       >
@@ -150,8 +150,8 @@ const List = ({ team_id }: { team_id: string }) => {
 
 const Page: NextAuthPage = () => {
   const router = useRouter();
-  const slug = String(router.query.slug);
-  const team = trpc.useQuery(["team.get", { slug }]);
+  const domain = String(router.query.domain);
+  const team = trpc.useQuery(["team.get", { domain }]);
 
   if (team.error) {
     router.push("/");

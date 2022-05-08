@@ -15,7 +15,7 @@ const Page: NextAuthPage = () => {
 
   return (
     <>
-      <h2 className="font-medium">Invitations</h2>
+      <h2 className="text-xl font-bold">Invitations</h2>
       <Loading query={invitations}>
         {(invitations) => (
           <div className="divide-y divide-gray-200">

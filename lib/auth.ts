@@ -20,6 +20,12 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
+  pages: {
+    signIn: `/login`,
+    verifyRequest: `/login`,
+    error: "/login", // Error code passed in query string as ?error=
+  },
+
   callbacks: {
     session: async ({ session, user }) => ({
       ...session,

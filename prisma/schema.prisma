@@ -64,15 +64,15 @@ model VerificationToken {
 }
 
 model Team {
-  id   String @id @default(cuid())
-  slug String @unique
-  name String @db.VarChar(255)
+  id     String @id @default(cuid())
+  domain String @unique
+  name   String @db.VarChar(255)
 
   members        TeamMember[]
   stripe_account StripeAccount?
 
   @@index([id])
-  @@index([slug])
+  @@index([domain])
 }
 
 enum MemberRole {

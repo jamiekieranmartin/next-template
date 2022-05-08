@@ -8,14 +8,14 @@ export const TeamLayout: React.FC<PropsWithChildren<TeamLayoutProps>> = ({
   children,
 }) => {
   const router = useRouter();
-  const slug = String(router.query.slug);
+  const domain = String(router.query.domain);
 
   return (
     <Layout>
       <div className="flex items-center gap-8">
-        <Link href={`/${slug}`}>Dashboard</Link>
-        <Link href={`/${slug}/members`}>Members</Link>
-        <Link href={`/${slug}/settings`}>Settings</Link>
+        <Link href={`/${domain}`}>Dashboard</Link>
+        <Link href={`/${domain}/members`}>Members</Link>
+        <Link href={`/${domain}/settings`}>Settings</Link>
       </div>
 
       {children}

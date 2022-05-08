@@ -5,9 +5,9 @@ import { useRouter } from "next/router";
 
 const Page: NextAuthPage = () => {
   const router = useRouter();
-  const slug = String(router.query.slug);
+  const domain = String(router.query.domain);
 
-  const team = trpc.useQuery(["team.get", { slug }]);
+  const team = trpc.useQuery(["team.get", { domain }]);
 
   if (team.error) {
     router.push("/");

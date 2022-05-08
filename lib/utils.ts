@@ -8,7 +8,7 @@ export const getInitials = (string: string | null | undefined) => {
   return initials;
 };
 
-export const slugify = (str: string) => {
+export const domainify = (str: string) => {
   str = str.replace(/^\s+|\s+$/g, "");
 
   // Make the string lowercase

@@ -4,7 +4,7 @@ import { Layout } from "../../components";
 const Page: NextAuthPage = () => {
   return (
     <>
-      <h2 className="font-medium">Settings</h2>
+      <h2 className="text-xl font-bold">Settings</h2>
     </>
   );
 };

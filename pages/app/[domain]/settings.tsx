@@ -3,7 +3,7 @@ import { trpc } from "../../../lib/trpc";
 import { Button, Form, Input, Loading, TeamLayout } from "../../../components";
 import { useRouter } from "next/router";
 import * as Alert from "@radix-ui/react-alert-dialog";
-import { slugify } from "../../../lib/utils";
+import { domainify } from "../../../lib/utils";
 import { useForm, zodResolver } from "@mantine/form";
 import { useEffect } from "react";
 import { Team } from "@prisma/client";
@@ -15,7 +15,7 @@ const TeamForm = ({ team }: { team: Team }) => {
   const form = useForm({
     initialValues: {
       id: team.id,
-      slug: team.slug,
+      domain: team.domain,
       name: team.name,
     },
     schema: zodResolver(team_edit),
@@ -29,19 +29,19 @@ const TeamForm = ({ team }: { team: Team }) => {
         pathname: router.pathname,
         query: {
           ...router.query,
-          slug: input.slug,
+          domain: input.domain,
         },
       });
     },
   });
 
   useEffect(() => {
-    form.setFieldValue("slug", team.slug);
+    form.setFieldValue("domain", team.domain);
     form.setFieldValue("name", team.name);
-  }, [team.slug, team.name]);
+  }, [team.domain, team.name]);
 
   useEffect(() => {
-    form.setFieldValue("slug", slugify(form.values.name));
+    form.setFieldValue("domain", domainify(form.values.name));
   }, [form.values.name]);
 
   return (
@@ -49,7 +49,7 @@ const TeamForm = ({ team }: { team: Team }) => {
       isLoading={mutation.isLoading}
       onSubmit={form.onSubmit((values) => mutation.mutate(values))}
     >
-      <h2 className="col-span-2">Team Details</h2>
+      <h2 className="text-xl font-bold col-span-2">Team Details</h2>
 
       <Input
         type="text"
@@ -65,9 +65,9 @@ const TeamForm = ({ team }: { team: Team }) => {
         type="text"
         required
         placeholder="my-team"
-        description={`www.domain.com/${form.values.slug || "my-team"}`}
-        onBlur={() => form.validateField("slug")}
-        {...form.getInputProps("slug")}
+        description={`${form.values.domain || "my-team"}.jamiekieranmartin.app`}
+        onBlur={() => form.validateField("domain")}
+        {...form.getInputProps("domain")}
       >
         Team Slug
       </Input>
@@ -156,9 +156,9 @@ const List = ({
 
 const Page: NextAuthPage = () => {
   const router = useRouter();
-  const slug = String(router.query.slug);
+  const domain = String(router.query.domain);
 
-  const team = trpc.useQuery(["team.get", { slug }]);
+  const team = trpc.useQuery(["team.get", { domain }]);
   if (team.error) {
     router.push("/");
   }

@@ -14,7 +14,7 @@ const members = (user_id: string): Prisma.TeamMemberListRelationFilter => ({
 
 const host = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+  : "http://app.localhost:3000";
 
 export const teamRouter = createProtectedRouter()
   /**
@@ -32,19 +32,19 @@ export const teamRouter = createProtectedRouter()
     },
   })
   /**
-   * Get a team by slug
+   * Get a team by domain
    */
   .query("get", {
     input: z.object({
-      slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+      domain: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     }),
     async resolve({ ctx, input }) {
       const { user_id } = ctx;
-      const { slug } = input;
+      const { domain } = input;
 
       const team = await ctx.prisma.team.findFirst({
         where: {
-          slug,
+          domain,
           members: members(user_id),
         },
         include: {
@@ -71,16 +71,16 @@ export const teamRouter = createProtectedRouter()
    */
   .query("members", {
     input: z.object({
-      slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+      domain: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     }),
     async resolve({ ctx, input }) {
       const { user_id } = ctx;
-      const { slug } = input;
+      const { domain } = input;
 
       return await ctx.prisma.teamMember.findMany({
         where: {
           team: {
-            slug,
+            domain,
             members: members(user_id),
           },
         },
@@ -198,8 +198,8 @@ export const teamRouter = createProtectedRouter()
 
       return stripe.accountLinks.create({
         account: account_id,
-        refresh_url: `${host}/${team.slug}/settings`,
-        return_url: `${host}/${team.slug}/settings`,
+        refresh_url: `${host}/${team.domain}/settings`,
+        return_url: `${host}/${team.domain}/settings`,
         type: "account_onboarding",
       });
     },
