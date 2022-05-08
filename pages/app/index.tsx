@@ -18,7 +18,7 @@ const Page: NextAuthPage = () => {
                   <div className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <Link
-                        href={`/u/${slug}`}
+                        href={`/${slug}`}
                         className="font-medium text-gray-900"
                       >
                         {name}
@@ -27,7 +27,7 @@ const Page: NextAuthPage = () => {
                   </div>
                   <div className="px-6 py-4 flex items-center justify-end">
                     <Button>
-                      <Link href={`/u/${slug}`}>Manage</Link>
+                      <Link href={`/${slug}`}>Manage</Link>
                     </Button>
                   </div>
                 </div>

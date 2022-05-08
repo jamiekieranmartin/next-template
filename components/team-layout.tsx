@@ -13,9 +13,9 @@ export const TeamLayout: React.FC<PropsWithChildren<TeamLayoutProps>> = ({
   return (
     <Layout>
       <div className="flex items-center gap-8">
-        <Link href={`/u/${slug}`}>Dashboard</Link>
-        <Link href={`/u/${slug}/members`}>Members</Link>
-        <Link href={`/u/${slug}/settings`}>Settings</Link>
+        <Link href={`/${slug}`}>Dashboard</Link>
+        <Link href={`/${slug}/members`}>Members</Link>
+        <Link href={`/${slug}/settings`}>Settings</Link>
       </div>
 
       {children}

@@ -22,7 +22,7 @@ const Page: NextAuthPage = () => {
   const mutation = trpc.useMutation(["team.create"], {
     onSuccess(input) {
       utils.invalidateQueries(["team.list"]);
-      router.push(`/u/${input.slug}`);
+      router.push(`/${input.slug}`);
     },
   });
 

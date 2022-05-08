@@ -198,8 +198,8 @@ export const teamRouter = createProtectedRouter()
 
       return stripe.accountLinks.create({
         account: account_id,
-        refresh_url: `${host}/u/${team.slug}/settings`,
-        return_url: `${host}/u/${team.slug}/settings`,
+        refresh_url: `${host}/${team.slug}/settings`,
+        return_url: `${host}/${team.slug}/settings`,
         type: "account_onboarding",
       });
     },

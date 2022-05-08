@@ -47,11 +47,11 @@ export const Auth = () => {
               children: "Dashboard",
             },
             {
-              href: "/u/create",
+              href: "/create",
               children: "Create a Team",
             },
-            { href: "/u/invitations", children: "Invitations" },
-            { href: "/u/settings", children: "Settings" },
+            { href: "/invitations", children: "Invitations" },
+            { href: "/settings", children: "Settings" },
           ].map(({ href, children }, i) => (
             <Menu.Item key={i}>
               {({ active }) => (
@@ -102,7 +102,7 @@ export const Layout: React.FC<PropsWithChildren<LayoutProps>> = ({
           {slug ? (
             <>
               <Divider />
-              <Link href={`/u/${slug}`}>
+              <Link href={`/${slug}`}>
                 <h1 className="text-lg font-medium">{slug}</h1>
               </Link>
             </>
