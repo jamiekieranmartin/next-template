@@ -167,8 +167,8 @@ const Page: NextAuthPage = () => {
     <Loading query={team}>
       {(team) => (
         <>
-          <TeamForm team={team} />
-          <List team={team} />
+          <TeamForm team={team!} />
+          <List team={team!} />
         </>
       )}
     </Loading>

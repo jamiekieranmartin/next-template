@@ -10,7 +10,6 @@ export function Loading<T>(props: LoadingProps<T>) {
   const { data, isLoading } = query;
 
   if (isLoading) return <>Loading...</>;
-  if (!data) return <>Not found</>;
 
   return <>{children(data)}</>;
 }

@@ -159,7 +159,7 @@ const Page: NextAuthPage = () => {
 
   return (
     <>
-      <Loading query={team}>{(team) => <List team_id={team.id} />}</Loading>
+      <Loading query={team}>{(team) => <List team_id={team?.id!} />}</Loading>
     </>
   );
 };
