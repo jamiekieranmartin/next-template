@@ -1,7 +1,7 @@
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 import { RouterContext } from "next/dist/shared/lib/router-context";
 
-import "../styles/globals.css";
+import "../src/styles/globals.css";
 
 export const parameters = {
   nextRouter: {

@@ -1,4 +1,4 @@
-import Index from "../../src/pages/home/index";
+import Index from "../../src/pages/index";
 
 export default {
   title: "Pages/Index",
