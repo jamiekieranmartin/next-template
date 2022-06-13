@@ -6,12 +6,12 @@ import * as Alert from "@radix-ui/react-alert-dialog";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
-import { Button, Form, Input, Loading } from "../../../components";
-import { TeamLayout } from "../../../layouts";
-import { EditTeamInputType, editTeamSchema } from "../../../lib/schemas";
-import { trpc } from "../../../lib/trpc";
-import { NextAuthPage } from "../../../lib/types";
-import { domainify } from "../../../lib/utils";
+import { Button, Form, Input, Loading } from "../../components";
+import { TeamLayout } from "../../layouts";
+import { EditTeamInputType, editTeamSchema } from "../../lib/schemas";
+import { trpc } from "../../lib/trpc";
+import { NextAuthPage } from "../../lib/types";
+import { domainify } from "../../lib/utils";
 
 type TeamFormProps = {
   team: Team;

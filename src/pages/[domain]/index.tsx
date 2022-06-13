@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
 
-import { Loading, Preview } from "../../../components";
-import { TeamLayout } from "../../../layouts";
-import { trpc } from "../../../lib/trpc";
-import { NextAuthPage } from "../../../lib/types";
+import { Loading, Preview } from "../../components";
+import { TeamLayout } from "../../layouts";
+import { trpc } from "../../lib/trpc";
+import { NextAuthPage } from "../../lib/types";
 
 const Page: NextAuthPage = () => {
   const router = useRouter();

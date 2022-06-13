@@ -7,14 +7,14 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
-import { Button, Form, Input, Loading, Avatar } from "../../../components";
-import { TeamLayout } from "../../../layouts";
+import { Button, Form, Input, Loading, Avatar } from "../../components";
+import { TeamLayout } from "../../layouts";
 import {
   InviteTeamMemberInputType,
   inviteTeamMemberSchema,
-} from "../../../lib/schemas";
-import { trpc } from "../../../lib/trpc";
-import { NextAuthPage } from "../../../lib/types";
+} from "../../lib/schemas";
+import { trpc } from "../../lib/trpc";
+import { NextAuthPage } from "../../lib/types";
 
 type MemberFormProps = {
   team_id: string;
