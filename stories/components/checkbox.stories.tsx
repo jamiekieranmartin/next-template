@@ -1,4 +1,4 @@
-import { Checkbox, CheckboxProps } from "../../components/checkbox";
+import { Checkbox, CheckboxProps } from "../../src/components/checkbox";
 
 export default {
   title: "Components/Checkbox",

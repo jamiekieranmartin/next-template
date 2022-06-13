@@ -1,4 +1,4 @@
-import { Preview, PreviewProps } from "../../components/preview";
+import { Preview, PreviewProps } from "../../src/components/preview";
 
 export default {
   title: "Components/Preview",

@@ -17,6 +17,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    // opinions
+    "noUncheckedIndexedAccess": true,
     "incremental": true
   },
   "include": [

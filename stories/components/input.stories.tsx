@@ -1,4 +1,4 @@
-import { Input, InputProps } from "../../components/input";
+import { Input, InputProps } from "../../src/components/input";
 
 export default {
   title: "Components/Input",

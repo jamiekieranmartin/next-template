@@ -1,4 +1,4 @@
-import { Link, LinkProps } from "../../components/link";
+import { Link, LinkProps } from "../../src/components/link";
 
 export default {
   title: "Components/Link",
