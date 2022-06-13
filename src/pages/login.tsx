@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 import { Layout } from "../layouts";
 import { NextAuthPage } from "../lib/types";
 
 const Page: NextAuthPage = () => {
+  const session = useSession();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   // Get error message added by next/auth in URL.
@@ -17,6 +19,10 @@ const Page: NextAuthPage = () => {
     const errorMessage = Array.isArray(error) ? error.pop() : error;
     errorMessage && console.error(errorMessage);
   }, [error]);
+
+  useEffect(() => {
+    if (session.status === "authenticated") router.push("/");
+  }, [session.status, router]);
 
   return (
     <>
