@@ -16,7 +16,7 @@ const members = (user_id: string): Prisma.TeamMemberListRelationFilter => ({
 
 const host = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
-  : "http://app.localhost:3000";
+  : "http://localhost:3000";
 
 export const teamRouter = createProtectedRouter()
   /**

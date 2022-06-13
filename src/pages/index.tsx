@@ -39,9 +39,6 @@ const Page: NextAuthPage = () => {
                     <Button>
                       <Link href={`/${domain}`}>Manage</Link>
                     </Button>
-                    <Button>
-                      <Link href={host.replace("app", domain)}>View</Link>
-                    </Button>
                   </div>
                 </div>
               ))
