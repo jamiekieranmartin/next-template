@@ -13,6 +13,11 @@ An opinionated [Next.js](https://nextjs.org/) template to hit the ground running
 - Database/s with [Planetscale](https://planetscale.com/)
 - SEO handled with [Next SEO](https://www.npmjs.com/package/next-seo)
 
+## Demo
+
+- https://jamiekieranmartin.app/
+- https://storybook.jamiekieranmartin.app/
+
 ## Prerequisites
 
 - [NodeJS](https://nodejs.org/en/)
@@ -53,7 +58,7 @@ Name your GitHub App. In our example, we'll call it "Next Template (dev)".
 
 Add your homepage URL (or a placeholder, if you don't have a website yet).
 
-For the "Callback URL" field, put http://app.localhost:3000. Since GitHub only allows one callback URL per app, we have to create separate apps for localhost and production (hence the "dev" name in step 3).
+For the "Callback URL" field, put http://localhost:3000. Since GitHub only allows one callback URL per app, we have to create separate apps for localhost and production (hence the "dev" name in step 3).
 
 If the "Active" field under "Webhook" is checked, uncheck it. Now, click on "Create Github App".
 
@@ -92,7 +97,7 @@ DATABASE_URL=mysql://root@127.0.0.1:3310/next-template
 # next-auth
 GITHUB_ID=
 GITHUB_SECRET=
-NEXTAUTH_URL=http://app.localhost:3000
+NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=
 
 # stripe
