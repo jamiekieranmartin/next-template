@@ -21,7 +21,7 @@ type MemberFormProps = {
 };
 
 const MemberForm: React.FC<MemberFormProps> = ({ team_id }) => {
-  const { register, handleSubmit, watch, setValue, reset } =
+  const { register, handleSubmit, setValue, reset } =
     useForm<InviteTeamMemberInputType>({
       resolver: zodResolver(inviteTeamMemberSchema),
     });

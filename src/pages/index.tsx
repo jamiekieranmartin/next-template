@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-
 import { Button, Link, Loading } from "../components";
 import { Layout } from "../layouts";
 import { trpc } from "../lib/trpc";
@@ -7,13 +5,6 @@ import { NextAuthPage } from "../lib/types";
 
 const Page: NextAuthPage = () => {
   const teams = trpc.useQuery(["team.list"]);
-  const [host, setHost] = useState("");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setHost(window.location.href);
-    }
-  }, []);
 
   return (
     <>
