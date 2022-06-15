@@ -6,3 +6,4 @@ export * from "./link";
 export * from "./loading";
 export * from "./input";
 export * from "./preview";
+export * from "./spinner";

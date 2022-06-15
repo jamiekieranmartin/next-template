@@ -2,6 +2,8 @@ import React from "react";
 
 import clsx from "clsx";
 
+import { Spinner } from "./spinner";
+
 export interface FormProps extends React.ComponentPropsWithRef<"form"> {
   isLoading?: boolean;
   children: React.ReactNode;
@@ -14,7 +16,7 @@ export const Form = React.forwardRef<HTMLFormElement, FormProps>(
 
     return (
       <form ref={ref} className={clsx("grid gap-4", className)} {...rest}>
-        {isLoading ? "Loading..." : children}
+        {isLoading ? <Spinner /> : children}
       </form>
     );
   }

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
+import { Spinner } from "../components";
 import { Layout } from "../layouts";
 import { NextAuthPage } from "../lib/types";
 
@@ -39,7 +40,7 @@ const Page: NextAuthPage = () => {
             } group flex justify-center items-center space-x-5 w-full sm:px-4 h-16 my-2 rounded-md focus:outline-none`}
           >
             {loading ? (
-              "Loading..."
+              <Spinner />
             ) : (
               <svg
                 className="w-8 h-8 group-hover:animate-wiggle"

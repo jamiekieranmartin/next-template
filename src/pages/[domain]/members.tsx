@@ -7,7 +7,14 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
-import { Button, Form, Input, Loading, Avatar } from "../../components";
+import {
+  Button,
+  Form,
+  Input,
+  Loading,
+  Avatar,
+  Spinner,
+} from "../../components";
 import { TeamLayout } from "../../layouts";
 import {
   InviteTeamMemberInputType,
@@ -73,12 +80,12 @@ const List: React.FC<ListProps> = ({ team_id }) => {
 
   const utils = trpc.useContext();
   const mutation = trpc.useMutation(["team.member.remove"], {
-    onSuccess(input) {
+    onSuccess() {
       utils.invalidateQueries(["team.member.list", { team_id }]);
     },
   });
 
-  if (!members.data || !member.data) return <>Loading...</>;
+  if (!members.data || !member.data) return <Spinner />;
 
   return (
     <>

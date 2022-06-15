@@ -6,7 +6,7 @@ import * as Alert from "@radix-ui/react-alert-dialog";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
-import { Button, Form, Input, Loading } from "../../components";
+import { Button, Form, Input, Loading, Spinner } from "../../components";
 import { TeamLayout } from "../../layouts";
 import { EditTeamInputType, editTeamSchema } from "../../lib/schemas";
 import { trpc } from "../../lib/trpc";
@@ -105,7 +105,7 @@ const List: React.FC<ListProps> = ({ team }) => {
     },
   });
 
-  if (!member.data) return <>Loading...</>;
+  if (!member.data) return <Spinner />;
   if (member.data.role !== "OWNER") return null;
 
   return (

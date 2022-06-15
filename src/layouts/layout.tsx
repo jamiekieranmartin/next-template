@@ -4,7 +4,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 
-import { Avatar, Button, Link } from "../components";
+import { Avatar, Button, Link, Loading } from "../components";
 import { trpc } from "../lib/trpc";
 
 export const Auth: React.FC = () => {
@@ -30,7 +30,9 @@ export const Auth: React.FC = () => {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button className="rounded-full">
-        <Avatar src={user.data?.image} name={user.data?.name} />
+        <Loading query={user}>
+          {(user) => <Avatar src={user?.image} name={user?.name} />}
+        </Loading>
       </Menu.Button>
 
       <Transition
