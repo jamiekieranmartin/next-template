@@ -33,7 +33,9 @@ export const checkoutRouter = createProtectedRouter()
       return await prisma.subscription.findFirst({
         where: {
           customer: {
-            user_id,
+            user: {
+              id: user_id,
+            },
           },
         },
         orderBy: {
@@ -53,9 +55,11 @@ export const checkoutRouter = createProtectedRouter()
     async resolve({ ctx, input }) {
       const { user_id } = ctx;
 
-      const customer = await prisma.customer.findUnique({
+      const customer = await prisma.customer.findFirst({
         where: {
-          user_id,
+          user: {
+            id: user_id,
+          },
         },
       });
 
@@ -95,9 +99,12 @@ export const checkoutRouter = createProtectedRouter()
    */
   .mutation("portal", {
     resolve: async ({ ctx }) => {
-      const customer = await prisma.customer.findUnique({
+      const { user_id } = ctx;
+      const customer = await prisma.customer.findFirst({
         where: {
-          user_id: ctx.user_id,
+          user: {
+            id: user_id,
+          },
         },
       });
 
