@@ -1,52 +1,36 @@
-import { TeamMember } from "@prisma/client";
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+
+import { TRPCError } from "@trpc/server";
 
 import { prisma } from "../../lib/prisma";
 import { inviteTeamMemberSchema } from "../../lib/schemas";
 import { createProtectedRouter } from "../create-protected-router";
 
+import { ensureMember, ensureOwner } from "./utils";
+
 export const memberRouter = createProtectedRouter()
-  /**
-   * Ensure the user is a team member
-   */
-  .middleware(async ({ ctx, rawInput, next }) => {
-    const { user_id } = ctx;
-    const team_id = (rawInput as TeamMember).team_id;
-
-    const isMember = await prisma.teamMember.count({
-      where: {
-        team_id,
-        user_id,
-      },
-    });
-
-    if (isMember) return next();
-
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: `You do not have access`,
-    });
-  })
   /**
    * List all team members
    */
   .query("list", {
     input: z.object({
-      team_id: z.string().cuid(),
+      slug: z.string(),
     }),
-    async resolve({ input }) {
-      const { team_id } = input;
+    async resolve({ ctx, input }) {
+      const { slug } = input;
+      await ensureMember(slug, ctx.user_id);
 
       return await prisma.teamMember.findMany({
         where: {
-          team_id,
+          team: {
+            slug,
+          },
+          accepted: true,
         },
         include: {
           user: {
             select: {
               name: true,
-              email: true,
               image: true,
             },
           },
@@ -59,25 +43,29 @@ export const memberRouter = createProtectedRouter()
    */
   .query("role", {
     input: z.object({
-      team_id: z.string().cuid(),
+      slug: z.string(),
     }),
     async resolve({ ctx, input }) {
-      const { user_id } = ctx;
-      const { team_id } = input;
+      const { slug } = input;
+      await ensureMember(slug, ctx.user_id);
 
       const teamMember = await prisma.teamMember.findFirst({
         where: {
-          team_id,
-          user_id,
+          team: {
+            slug,
+          },
+          user_id: ctx.user_id,
         },
       });
 
-      if (teamMember) return teamMember;
+      if (!teamMember) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: `You do not have access`,
+        });
+      }
 
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: `You do not have access`,
-      });
+      return teamMember;
     },
   })
   /**
@@ -85,17 +73,24 @@ export const memberRouter = createProtectedRouter()
    */
   .query("invitations", {
     input: z.object({
-      team_id: z.string().cuid(),
+      slug: z.string(),
     }),
-    async resolve({ input }) {
-      const { team_id } = input;
+    async resolve({ ctx, input }) {
+      const { slug } = input;
+      await ensureMember(slug, ctx.user_id);
 
       return await prisma.teamMember.findMany({
-        where: { team_id, accepted: false },
-        include: {
+        where: {
           team: {
+            slug,
+          },
+          accepted: false,
+        },
+        include: {
+          user: {
             select: {
               name: true,
+              image: true,
             },
           },
         },
@@ -103,45 +98,24 @@ export const memberRouter = createProtectedRouter()
     },
   })
   /**
-   * Ensure the user is a team owner
-   */
-  .middleware(async ({ ctx, rawInput, next }) => {
-    const { user_id } = ctx;
-    const team_id = (rawInput as TeamMember).team_id;
-
-    const isOwner = await prisma.teamMember.count({
-      where: {
-        team_id,
-        user_id,
-        role: "OWNER",
-      },
-    });
-
-    if (isOwner) return next();
-
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: `You do not have access`,
-    });
-  })
-  /**
    * Invite a user by email to the team
    */
   .mutation("invite", {
     input: inviteTeamMemberSchema,
-    async resolve({ input }) {
-      const { team_id, email } = input;
+    async resolve({ ctx, input }) {
+      const { slug } = input;
+      await ensureOwner(slug, ctx.user_id);
 
       return await prisma.teamMember.create({
         data: {
           team: {
             connect: {
-              id: team_id,
+              slug,
             },
           },
           user: {
             connect: {
-              email,
+              email: input.email,
             },
           },
         },
@@ -153,23 +127,39 @@ export const memberRouter = createProtectedRouter()
    */
   .mutation("remove", {
     input: z.object({
-      team_id: z.string().cuid(),
+      slug: z.string(),
       user_id: z.string().cuid(),
     }),
     async resolve({ ctx, input }) {
-      const { team_id, user_id } = input;
-
-      if (user_id === user_id)
+      if (ctx.user_id === input.user_id) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: `You cannot remove yourself`,
         });
+      }
+
+      const { slug } = input;
+
+      await ensureOwner(slug, ctx.user_id);
+
+      const team = await prisma.team.findUnique({
+        where: {
+          slug,
+        },
+      });
+
+      if (!team) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Team does not exist`,
+        });
+      }
 
       return await prisma.teamMember.delete({
         where: {
           user_id_team_id: {
-            team_id,
-            user_id,
+            team_id: team.id,
+            user_id: input.user_id,
           },
         },
       });

@@ -1,67 +1,75 @@
 import { useEffect } from "react";
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
-import { Button, Input, Form } from "../components";
-import { Layout } from "../layouts";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Button, Card, Form, Input, Text } from "../components";
+import { AppLayout } from "../layouts";
 import { CreateTeamInputType, createTeamSchema } from "../lib/schemas";
 import { trpc } from "../lib/trpc";
-import { NextAuthPage } from "../lib/types";
-import { domainify } from "../lib/utils";
+import { NextLayoutPage } from "../lib/types";
+import { slugify } from "../lib/utils";
 
-const Page: NextAuthPage = () => {
+const Page: NextLayoutPage = () => {
   const router = useRouter();
 
-  const { register, handleSubmit, watch, setValue } =
+  const { register, handleSubmit, watch, setValue, formState } =
     useForm<CreateTeamInputType>({
       resolver: zodResolver(createTeamSchema),
     });
 
   const utils = trpc.useContext();
   const mutation = trpc.useMutation(["team.create"], {
-    onSuccess(input) {
-      utils.invalidateQueries(["team.list"]);
-      router.push(`/${input.domain}`);
+    async onSuccess() {
+      await utils.invalidateQueries(["team.list"]);
+      router.push(`/teams/${slug}`);
     },
   });
 
-  const { domain, name } = watch();
+  const { slug, name } = watch();
 
   useEffect(() => {
     if (name) {
-      setValue("domain", domainify(name));
+      setValue("slug", slugify(name));
     }
   }, [name, setValue]);
 
   return (
-    <Form
-      isLoading={mutation.isLoading}
-      onSubmit={handleSubmit((values) => mutation.mutate(values))}
-    >
-      <h2 className="text-xl font-bold col-span-2">Create a new team</h2>
+    <Card isLoading={mutation.isLoading}>
+      <Form onSubmit={handleSubmit((values) => mutation.mutate(values))}>
+        <Text>
+          <h2>Create a new team</h2>
+        </Text>
 
-      <Input type="text" required placeholder="My Team" {...register("name")}>
-        Team Name
-      </Input>
+        <Input
+          type="text"
+          required
+          placeholder="My Team"
+          error={formState.errors.name?.message}
+          {...register("name")}
+        >
+          Team Name
+        </Input>
 
-      <Input
-        type="text"
-        required
-        placeholder="my-team"
-        description={`${domain || "my-team"}.jamiekieranmartin.app`}
-        {...register("domain")}
-      >
-        Team Slug
-      </Input>
+        <Input
+          type="text"
+          required
+          placeholder="my-team"
+          description={`*.vercel.app/team/${slug || "my-team"}`}
+          error={formState.errors.slug?.message}
+          {...register("slug")}
+        >
+          Team Slug
+        </Input>
 
-      <Button type="submit">Submit</Button>
-    </Form>
+        <Button type="submit">Submit</Button>
+      </Form>
+    </Card>
   );
 };
 
 Page.auth = true;
-Page.Layout = Layout;
+Page.Layout = AppLayout;
 
 export default Page;

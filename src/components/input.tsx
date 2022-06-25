@@ -1,5 +1,4 @@
 import React from "react";
-
 import clsx from "clsx";
 import dayjs from "dayjs";
 
@@ -8,7 +7,6 @@ export interface InputProps extends React.ComponentPropsWithRef<"input"> {
   description?: string;
 }
 
-// eslint-disable-next-line react/display-name
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (props, ref) => {
     const { children, className, description, error, ...rest } = props;
@@ -42,10 +40,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 : rest.value
             }
           />
-          {description && (
+          {!!description && (
             <small className="p-1 opacity-50">{description}</small>
           )}
-          {error && <small className="text-red-400 p-1">{error}</small>}
+          {!!error && <small className="text-red-400 p-1">{error}</small>}
         </div>
       </div>
     );

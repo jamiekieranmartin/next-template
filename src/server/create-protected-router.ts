@@ -4,15 +4,14 @@ import { Context } from "./context";
 
 export function createProtectedRouter() {
   return trpc.router<Context>().middleware(({ ctx, next }) => {
-    if (!ctx.session || !ctx.session.user || !ctx.session.user.id) {
+    if (!ctx.token?.sub) {
       throw new trpc.TRPCError({ code: "UNAUTHORIZED" });
     }
 
     return next({
       ctx: {
         ...ctx,
-        session: ctx.session,
-        user_id: ctx.session.user.id,
+        user_id: ctx.token.sub,
       },
     });
   });

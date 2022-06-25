@@ -9,7 +9,7 @@ export const getInitials = (string: string | null | undefined) => {
   return initials;
 };
 
-export const domainify = (str: string) => {
+export const slugify = (str: string) => {
   str = str.replace(/^\s+|\s+$/g, "");
 
   // Make the string lowercase
@@ -35,11 +35,25 @@ export const domainify = (str: string) => {
   return str;
 };
 
-export const formatAmount = (unit_amount: number, currency: string = "aud") => {
-  const amount = unit_amount / 100;
+export const formatAmount = (
+  unit_amount: number | bigint | null,
+  currency: string = "aud"
+) => {
+  if (unit_amount === null) return;
+
+  const amount = Number(unit_amount) / 100;
 
   return new Intl.NumberFormat(navigator.language || "en-US", {
     style: "currency",
     currency,
   }).format(amount);
+};
+
+export const toDateTime = (secs: number | null) => {
+  if (!secs) {
+    return;
+  }
+  var t = new Date("1970-01-01T00:30:00Z"); // Unix epoch start.
+  t.setSeconds(secs);
+  return t;
 };

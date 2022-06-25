@@ -1,8 +1,8 @@
 import React from "react";
+import clsx from "clsx";
 
 import * as C from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
-import clsx from "clsx";
 
 export interface CheckboxProps extends React.ComponentPropsWithRef<"button"> {
   error?: React.ReactNode;
@@ -38,8 +38,8 @@ export const Checkbox: React.FC<CheckboxProps> = (props) => {
         </label>
       </div>
 
-      {description && <small className="p-1 opacity-50">{description}</small>}
-      {error && <small className="text-red-400 p-1">{error}</small>}
+      {!!description && <small className="p-1 opacity-50">{description}</small>}
+      {!!error && <small className="text-red-400 p-1">{error}</small>}
     </div>
   );
 };

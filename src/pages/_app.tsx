@@ -1,32 +1,35 @@
-import "../styles/globals.css";
 import React, { useEffect } from "react";
+import type { AppProps } from "next/app";
+import { SessionProvider, signIn, useSession } from "next-auth/react";
 
+import { TRPCClientErrorLike } from "@trpc/client";
 import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
 import { loggerLink } from "@trpc/client/links/loggerLink";
 import { withTRPC } from "@trpc/next";
-import { TRPCError } from "@trpc/server";
-import { SessionProvider, signIn, useSession } from "next-auth/react";
-import type { AppProps } from "next/app";
-import superjson from "superjson";
+import type { Maybe } from "@trpc/server";
 
-import { SEO } from "../lib/seo";
-import { NextAuthPage } from "../lib/types";
-import { AppRouter } from "../server/routers/_app";
+import { SEO } from "../components";
+import { setupLogRocket } from "../lib/logrocket";
+import { transformer } from "../lib/trpc";
+import { NextLayoutPage } from "../lib/types";
+import type { AppRouter } from "../server/routers/_app";
+
+import "../styles/globals.css";
+
+setupLogRocket();
 
 type AppPropsWithAuth = AppProps & {
-  Component: NextAuthPage;
+  Component: NextLayoutPage;
 };
 
-const App = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}: AppPropsWithAuth) => {
+const App = ({ Component, pageProps }: AppPropsWithAuth) => {
   const Layout =
     Component.Layout || ((props: any) => <React.Fragment {...props} />);
 
   return (
-    <SessionProvider session={session}>
+    <SessionProvider>
       <SEO />
+
       {Component.auth ? (
         <Auth>
           <Layout>
@@ -68,30 +71,48 @@ const getBaseUrl = () => {
 
 export default withTRPC<AppRouter>({
   config() {
+    /**
+     * If you want to use SSR, you need to use the server's full URL
+     * @link https://trpc.io/docs/ssr
+     */
     return {
+      /**
+       * @link https://trpc.io/docs/links
+       */
       links: [
+        // adds pretty logs to your console in development and logs errors in production
         loggerLink({
-          enabled: (opts) =>
-            process.env.NODE_ENV === "development" ||
-            (opts.direction === "down" && opts.result instanceof Error),
+          enabled: () => true,
         }),
         httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,
         }),
       ],
-      transformer: superjson,
+      /**
+       * @link https://trpc.io/docs/data-transformers
+       */
+      transformer,
+      /**
+       * @link https://react-query.tanstack.com/reference/QueryClient
+       */
       queryClientConfig: {
         defaultOptions: {
           queries: {
-            retry: (failureCount: number, error: any) => {
-              const trcpErrorCode = error?.data?.code as TRPCError["code"];
+            retry: (failureCount, _err) => {
+              const err = _err as never as Maybe<
+                TRPCClientErrorLike<AppRouter>
+              >;
+              const code = err?.data?.code;
               if (
-                trcpErrorCode === "NOT_FOUND" ||
-                trcpErrorCode === "UNAUTHORIZED"
-              )
+                code === "BAD_REQUEST" ||
+                code === "FORBIDDEN" ||
+                code === "UNAUTHORIZED"
+              ) {
+                // if input data is wrong or you're not authorized there's no point retrying a query
                 return false;
-              if (failureCount < 3) return true;
-              return false;
+              }
+              const MAX_QUERY_RETRIES = 3;
+              return failureCount < MAX_QUERY_RETRIES;
             },
           },
         },

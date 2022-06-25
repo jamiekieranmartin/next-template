@@ -1,5 +1,4 @@
 import React from "react";
-
 import clsx from "clsx";
 
 export const widths = {
@@ -20,7 +19,6 @@ export interface ButtonProps extends React.ComponentPropsWithRef<"button"> {
   danger?: boolean;
 }
 
-// eslint-disable-next-line react/display-name
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (props, ref) => {
     const {
@@ -36,11 +34,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={clsx(
-          "font-medium text-gray-700 rounded border border-gray-300 flex items-center disabled:cursor-not-allowed disabled:opacity-25 hover:opacity-75 transform duration-300 ease-in-out",
+          "font-medium text-white rounded border flex items-center disabled:cursor-not-allowed disabled:opacity-25 hover:opacity-75 transform duration-300 ease-in-out",
           {
             [widths[width]]: true,
             [sizes[size]]: true,
-            "bg-red-500 text-white": danger,
+            "bg-red-500": danger,
+            "bg-gray-900": !danger,
           },
           className
         )}

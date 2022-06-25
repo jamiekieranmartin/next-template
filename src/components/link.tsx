@@ -1,21 +1,18 @@
-import clsx from "clsx";
+import React from "react";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
+import clsx from "clsx";
 
 export type LinkProps = {
   href?: NextLinkProps["href"];
   active?: boolean;
 } & React.ComponentPropsWithRef<"a">;
 
-export const Link: React.FC<LinkProps> = ({
-  className,
-  active,
-  children,
-  href,
-  ...props
-}) => {
-  if (!href) {
-    return (
+export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
+  ({ className, active, children, href, ...props }, ref) => {
+    const Component = (
       <a
+        ref={ref}
+        href={href}
         className={clsx(
           "cursor-pointer",
           {
@@ -28,22 +25,11 @@ export const Link: React.FC<LinkProps> = ({
         {children}
       </a>
     );
-  }
 
-  return (
-    <NextLink href={href}>
-      <a
-        className={clsx(
-          "cursor-pointer",
-          {
-            "bg-black/5": active,
-          },
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </a>
-    </NextLink>
-  );
-};
+    if (!href || href.startsWith("http")) {
+      return Component;
+    }
+
+    return <NextLink href={href}>{Component}</NextLink>;
+  }
+);

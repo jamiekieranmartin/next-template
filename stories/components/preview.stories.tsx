@@ -1,3 +1,4 @@
+import { Card } from "../../src/components";
 import { Preview, PreviewProps } from "../../src/components/preview";
 
 export default {
@@ -9,3 +10,9 @@ export default {
 };
 
 export const Default = (args: PreviewProps) => <Preview {...args} />;
+
+export const InACard = (args: PreviewProps) => (
+  <Card>
+    <Preview {...args} />
+  </Card>
+);

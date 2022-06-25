@@ -2,7 +2,7 @@ export const Spinner: React.FC = () => {
   return (
     <svg
       role="status"
-      className="mx-auto inline w-6 h-6 animate-spin"
+      className="mx-auto self-center justify-self-center w-6 h-6 animate-spin"
       viewBox="0 0 100 101"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

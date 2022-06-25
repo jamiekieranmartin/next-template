@@ -1,22 +1,12 @@
-import { Prisma, Team } from "@prisma/client";
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+
+import { TRPCError } from "@trpc/server";
 
 import { prisma } from "../../lib/prisma";
 import { createTeamSchema, editTeamSchema } from "../../lib/schemas";
-import { stripe } from "../../lib/stripe";
 import { createProtectedRouter } from "../create-protected-router";
 
-const members = (user_id: string): Prisma.TeamMemberListRelationFilter => ({
-  some: {
-    user_id,
-    accepted: true,
-  },
-});
-
-const host = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+import { ensureOwner } from "./utils";
 
 export const teamRouter = createProtectedRouter()
   /**
@@ -25,47 +15,48 @@ export const teamRouter = createProtectedRouter()
   .query("list", {
     async resolve({ ctx }) {
       const { user_id } = ctx;
-
       return await prisma.team.findMany({
         where: {
-          members: members(user_id),
+          members: {
+            some: {
+              user_id,
+              accepted: true,
+            },
+          },
         },
       });
     },
   })
   /**
-   * Get a team by domain
+   * Get a team by slug
    */
   .query("get", {
     input: z.object({
-      domain: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+      slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     }),
     async resolve({ ctx, input }) {
       const { user_id } = ctx;
-      const { domain } = input;
-
+      const { slug } = input;
       const team = await prisma.team.findFirst({
         where: {
-          domain,
-          members: members(user_id),
-        },
-        include: {
-          stripe_account: {
-            select: {
-              default_currency: true,
-              charges_enabled: true,
-              payouts_enabled: true,
+          slug,
+          members: {
+            some: {
+              user_id,
+              accepted: true,
             },
           },
         },
       });
 
-      if (team) return team;
+      if (!team) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `You do not have access`,
+        });
+      }
 
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: `You do not have access`,
-      });
+      return team;
     },
   })
   /**
@@ -73,17 +64,22 @@ export const teamRouter = createProtectedRouter()
    */
   .query("members", {
     input: z.object({
-      domain: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+      slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     }),
     async resolve({ ctx, input }) {
       const { user_id } = ctx;
-      const { domain } = input;
-
+      const { slug } = input;
       return await prisma.teamMember.findMany({
         where: {
           team: {
-            domain,
-            members: members(user_id),
+            slug,
+
+            members: {
+              some: {
+                user_id,
+                accepted: true,
+              },
+            },
           },
         },
       });
@@ -96,113 +92,20 @@ export const teamRouter = createProtectedRouter()
     input: createTeamSchema,
     async resolve({ ctx, input }) {
       const { user_id } = ctx;
-
-      const account = await stripe.accounts.create({
-        type: "standard",
-        business_type: "non_profit",
-      });
-
+      const { name, slug } = input;
       return await prisma.team.create({
         data: {
-          ...input,
-          stripe_account: {
-            create: {
-              stripe_id: account.id,
-              default_currency: account.default_currency,
-              charges_enabled: account.charges_enabled,
-              payouts_enabled: account.payouts_enabled,
-            },
-          },
+          name,
+          slug,
+
           members: {
             create: {
               user_id,
               accepted: true,
-              role: "OWNER",
+              role: "owner",
             },
           },
         },
-      });
-    },
-  })
-  /**
-   * Ensure the user is an owner of the team
-   */
-  .middleware(async ({ ctx, rawInput, next }) => {
-    const { user_id } = ctx;
-    const team_id = (rawInput as Team).id;
-
-    const isOwner = await prisma.teamMember.count({
-      where: {
-        team_id,
-        user_id,
-        role: "OWNER",
-      },
-    });
-
-    if (isOwner) return next();
-
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: `You do not have access`,
-    });
-  })
-  /**
-   * Connect Stripe Account
-   */
-  .mutation("connect", {
-    input: z.object({
-      id: z.string().cuid(),
-    }),
-    async resolve({ ctx, input }) {
-      const { id } = input;
-
-      const team = await prisma.team.findFirst({
-        where: {
-          id,
-        },
-        include: {
-          stripe_account: true,
-        },
-      });
-
-      if (!team)
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: `No team found`,
-        });
-
-      let account_id = team.stripe_account?.stripe_id;
-
-      if (!account_id) {
-        const account = await stripe.accounts.create({
-          type: "standard",
-          business_type: "non_profit",
-        });
-
-        await prisma.team.update({
-          where: {
-            id,
-          },
-          data: {
-            stripe_account: {
-              create: {
-                stripe_id: account.id,
-                default_currency: account.default_currency,
-                charges_enabled: account.charges_enabled,
-                payouts_enabled: account.payouts_enabled,
-              },
-            },
-          },
-        });
-
-        account_id = account.id;
-      }
-
-      return stripe.accountLinks.create({
-        account: account_id,
-        refresh_url: `${host}/${team.domain}/settings`,
-        return_url: `${host}/${team.domain}/settings`,
-        type: "account_onboarding",
       });
     },
   })
@@ -211,14 +114,19 @@ export const teamRouter = createProtectedRouter()
    */
   .mutation("edit", {
     input: editTeamSchema,
-    async resolve({ input }) {
-      const { id, ...rest } = input;
+    async resolve({ ctx, input }) {
+      const { user_id } = ctx;
+      const { id, slug, name } = input;
+      await ensureOwner(slug, user_id);
 
       return await prisma.team.update({
         where: {
           id,
         },
-        data: rest,
+        data: {
+          name,
+          slug,
+        },
       });
     },
   })
@@ -227,20 +135,24 @@ export const teamRouter = createProtectedRouter()
    */
   .mutation("delete", {
     input: z.object({
-      id: z.string().cuid(),
+      slug: z.string(),
     }),
     async resolve({ ctx, input }) {
-      const { id } = input;
+      const { user_id } = ctx;
+      const { slug } = input;
+      await ensureOwner(slug, user_id);
 
       await prisma.teamMember.deleteMany({
         where: {
-          team_id: id,
+          team: {
+            slug,
+          },
         },
       });
 
       return await prisma.team.delete({
         where: {
-          id,
+          slug,
         },
       });
     },

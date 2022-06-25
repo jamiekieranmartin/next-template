@@ -1,5 +1,4 @@
 import React from "react";
-
 import clsx from "clsx";
 
 export interface SelectProps extends React.ComponentPropsWithRef<"select"> {
@@ -11,7 +10,6 @@ export interface SelectProps extends React.ComponentPropsWithRef<"select"> {
   description?: string;
 }
 
-// eslint-disable-next-line react/display-name
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   (props, ref) => {
     const { children, className, options, description, error, ...rest } = props;
@@ -41,10 +39,10 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
               </option>
             ))}
           </select>
-          {description && (
+          {!!description && (
             <small className="p-1 opacity-50">{description}</small>
           )}
-          {error && <small className="text-red-400 p-1">{error}</small>}
+          {!!error && <small className="text-red-400 p-1">{error}</small>}
         </div>
       </div>
     );

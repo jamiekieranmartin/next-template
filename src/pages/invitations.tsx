@@ -1,55 +1,37 @@
-import { Button, Loading } from "../components";
-import { Layout } from "../layouts";
-import { trpc } from "../lib/trpc";
-import { NextAuthPage } from "../lib/types";
+import { Button, Card, List, Text } from "../components";
+import { AppLayout } from "../layouts";
+import { useInvitations } from "../lib/hooks";
+import { NextLayoutPage } from "../lib/types";
 
-const Page: NextAuthPage = () => {
-  const invitations = trpc.useQuery(["user.invitations"]);
-
-  const utils = trpc.useContext();
-  const mutation = trpc.useMutation(["user.accept"], {
-    async onSuccess() {
-      utils.invalidateQueries(["user.invitations"]);
-      utils.invalidateQueries(["team.list"]);
-    },
-  });
+const Page: NextLayoutPage = () => {
+  const { invitations, accept } = useInvitations();
 
   return (
-    <>
-      <h2 className="text-xl font-bold">Invitations</h2>
-      <Loading query={invitations}>
-        {(invitations) => (
-          <div className="divide-y divide-gray-200">
-            {invitations && invitations.length ? (
-              invitations.map(({ team_id, team }, i) => (
-                <div key={i} className="flex justify-between">
-                  <div className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="ml-4">
-                        <div className="font-medium text-gray-900">
-                          {team.name}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="px-6 py-4 flex justify-end">
-                    <Button onClick={() => mutation.mutate({ team_id })}>
-                      Accept
-                    </Button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <small>No invitations</small>
-            )}
-          </div>
-        )}
-      </Loading>
-    </>
+    <Card isLoading={invitations.isLoading}>
+      <Text>
+        <h2>Invitations</h2>
+      </Text>
+
+      <List
+        data={invitations.data}
+        columns={[
+          {
+            className: "ml-4 flex items-center font-medium text-gray-900",
+            render: ({ team }) => team.name,
+          },
+          {
+            render: ({ team_id }) => (
+              <Button onClick={() => accept.mutate({ team_id })}>Accept</Button>
+            ),
+          },
+        ]}
+        emptyLabel="You have no pending invitations."
+      />
+    </Card>
   );
 };
 
 Page.auth = true;
-Page.Layout = Layout;
+Page.Layout = AppLayout;
 
 export default Page;

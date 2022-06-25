@@ -9,6 +9,10 @@ generator js {
   previewFeatures = ["referentialIntegrity"]
 }
 
+// -----------------------------------------------------------------------------
+// Authentication
+// -----------------------------------------------------------------------------
+
 model Account {
   id                       String  @id @default(cuid())
   userId                   String
@@ -27,17 +31,10 @@ model Account {
   oauth_token              String? @db.VarChar(2000)
   user                     User    @relation(fields: [userId], references: [id], onUpdate: NoAction)
 
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+
   @@unique([provider, providerAccountId])
-  @@index([userId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onUpdate: NoAction)
-
   @@index([userId])
 }
 
@@ -49,35 +46,36 @@ model User {
   image         String?
 
   accounts     Account[]
-  sessions     Session[]
+  customer     Customer?
   team_members TeamMember[]
 
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+
   @@index([id])
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-}
+// -----------------------------------------------------------------------------
+// Team
+// -----------------------------------------------------------------------------
 
 model Team {
-  id     String @id @default(cuid())
-  domain String @unique
-  name   String @db.VarChar(255)
+  id   String @id @default(cuid())
+  slug String @unique
+  name String @db.VarChar(255)
 
-  members        TeamMember[]
-  stripe_account StripeAccount?
+  members TeamMember[]
+
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
 
   @@index([id])
-  @@index([domain])
+  @@index([slug])
 }
 
 enum MemberRole {
-  MEMBER
-  OWNER
+  member
+  owner
 }
 
 model TeamMember {
@@ -85,26 +83,122 @@ model TeamMember {
   team_id String
 
   accepted Boolean    @default(false)
-  role     MemberRole @default(MEMBER)
+  role     MemberRole @default(member)
 
   user User @relation(fields: [user_id], references: [id], onUpdate: NoAction)
   team Team @relation(fields: [team_id], references: [id], onUpdate: NoAction)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
 
   @@id([user_id, team_id])
   @@index([user_id, team_id])
 }
 
-model StripeAccount {
-  id               String  @id @default(cuid())
-  stripe_id        String  @unique
-  default_currency String  @default("aud")
-  charges_enabled  Boolean @default(false)
-  payouts_enabled  Boolean @default(false)
+// -----------------------------------------------------------------------------
+// Stripe
+// -----------------------------------------------------------------------------
 
-  team_id String @unique
+model Customer {
+  id       String @id // The user's customer ID in Stripe. User must not be able to update this.
+  metadata Json
 
-  team Team @relation(fields: [team_id], references: [id], onUpdate: NoAction)
+  user_id String @unique
+
+  subscriptions Subscription[]
+
+  user User @relation(fields: [user_id], references: [id], onUpdate: NoAction)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
 
   @@index([id])
-  @@index([stripe_id])
+  @@index([user_id])
+}
+
+model Product {
+  id          String  @id
+  active      Boolean
+  name        String
+  description String?
+  metadata    Json
+
+  prices Price[]
+
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@index([id])
+}
+
+enum PricingType {
+  one_time
+  recurring
+}
+
+enum PricingPlanInterval {
+  day
+  week
+  month
+  year
+}
+
+model Price {
+  id                          String               @id
+  active                      Boolean
+  nickname                    String?
+  unit_amount                 BigInt? // The unit amount as a positive integer in the smallest currency unit (e.g., 100 cents for US$1.00 or 100 for ¥100, a zero-decimal currency).
+  currency                    String               @db.VarChar(3) // Three-letter ISO currency code, in lowercase.
+  type                        PricingType // One of `one_time` or `recurring` depending on whether the price is for a one-time purchase or a recurring (subscription) purchase.
+  recurring_interval          PricingPlanInterval? // The frequency at which a subscription is billed. One of `day`, `week`, `month` or `year`.
+  recurring_interval_count    Int? // The number of intervals (specified in the `interval` attribute) between subscription billings. For example, `interval=month` and `interval_count=3` bills every 3 months.
+  recurring_trial_period_days Int? // Default number of trial days when subscribing a customer to this price using [`trial_from_plan=true`](https://stripe.com/docs/api#create_subscription-trial_from_plan).
+  metadata                    Json
+
+  product_id String
+
+  product       Product        @relation(fields: [product_id], references: [id], onUpdate: NoAction)
+  subscriptions Subscription[]
+
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@index([id])
+}
+
+enum SubscriptionStatus {
+  trialing
+  active
+  canceled
+  incomplete
+  incomplete_expired
+  past_due
+  unpaid
+}
+
+model Subscription {
+  id                   String             @id
+  status               SubscriptionStatus
+  quantity             Int // Quantity multiplied by the unit amount of the price creates the amount of the subscription. Can be used to charge multiple seats.
+  cancel_at_period_end Boolean // If true the subscription has been canceled by the user and will be deleted at the end of the billing period.
+  current_period_start DateTime? // Start of the current period that the subscription has been invoiced for.
+  current_period_end   DateTime? // End of the current period that the subscription has been invoiced for. At the end of this period, a new invoice will be created.
+  ended_at             DateTime? // If the subscription has ended, the timestamp of the date the subscription ended.
+  cancel_at            DateTime? // A date in the future at which the subscription will automatically get canceled.
+  canceled_at          DateTime? // If the subscription has been canceled, the date of that cancellation. If the subscription was canceled with `cancel_at_period_end`, `canceled_at` will still reflect the date of the initial cancellation request, not the end of the subscription period when the subscription is automatically moved to a canceled state.
+  trial_start          DateTime? // If the subscription has a trial, the beginning of that trial.
+  trial_end            DateTime? // If the subscription has a trial, the end of that trial.
+  metadata             Json // Set of key-value pairs, used to store additional information about the object in a structured format.
+
+  customer_id String
+  price_id    String
+
+  customer Customer @relation(fields: [customer_id], references: [id], onUpdate: NoAction)
+  price    Price    @relation(fields: [price_id], references: [id], onUpdate: NoAction)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@index([id])
+  @@index([customer_id])
 }

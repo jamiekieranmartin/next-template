@@ -12,7 +12,7 @@ export const SEO = () => (
       site_name: "*",
       images: [
         {
-          url: "https://*.vercel.app/android-chrome-512x512.png",
+          url: "/android-chrome-512x512.png",
           width: 800,
           height: 600,
           alt: "*",
@@ -40,7 +40,7 @@ export const SEO = () => (
       },
       {
         rel: "manifest",
-        href: "/site.webmanifest",
+        href: "/manifest.json",
       },
       {
         rel: "preconnect",
