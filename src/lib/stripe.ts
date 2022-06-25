@@ -123,19 +123,17 @@ export const handleSubscription = async (subscription: Stripe.Subscription) => {
 };
 
 export const handleCustomer = async (customer: Stripe.Customer) => {
+  if (!customer.email) return;
+
   await prisma.customer.upsert({
     create: {
       id: customer.id,
+      email: customer.email,
       metadata: customer.metadata,
-      user: {
-        connect: {
-          id: customer.metadata.user_id,
-        },
-      },
     },
     update: {
+      email: customer.email,
       metadata: customer.metadata,
-      user_id: customer.metadata.user_id,
     },
     where: {
       id: customer.id,

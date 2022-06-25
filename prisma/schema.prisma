@@ -101,19 +101,18 @@ model TeamMember {
 
 model Customer {
   id       String @id // The user's customer ID in Stripe. User must not be able to update this.
+  email    String @unique
   metadata Json
-
-  user_id String @unique
 
   subscriptions Subscription[]
 
-  user User @relation(fields: [user_id], references: [id], onUpdate: NoAction)
+  user User? @relation(fields: [email], references: [email], onUpdate: NoAction)
 
   created_at DateTime  @default(now())
   updated_at DateTime? @updatedAt
 
   @@index([id])
-  @@index([user_id])
+  @@index([email])
 }
 
 model Product {
