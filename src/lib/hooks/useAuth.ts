@@ -14,7 +14,7 @@ export const useAuth = () => {
     signIn: () => {
       setLoading(true);
       signIn("github", {
-        callbackUrl: "/teamss",
+        callbackUrl: "/teams",
       });
     },
     signOut,
