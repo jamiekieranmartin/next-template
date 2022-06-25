@@ -14,7 +14,8 @@
     "db:studio": "prisma studio",
     "db:seed": "prisma db seed",
     "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhook",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@headlessui/react": "^1.6.5",
@@ -66,6 +67,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-storybook": "^0.5.13",
+    "husky": "^8.0.0",
     "postcss": "^8.4.14",
     "prisma": "^3.15.1",
     "storybook-addon-next-router": "^4.0.0",
