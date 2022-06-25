@@ -87,8 +87,8 @@ export const checkoutRouter = createProtectedRouter()
         subscription_data: {
           trial_from_plan: true,
         },
-        success_url: `${host}/settings`,
-        cancel_url: `${host}/`,
+        success_url: `${host}/account`,
+        cancel_url: `${host}/account`,
       });
 
       return session;
@@ -117,7 +117,7 @@ export const checkoutRouter = createProtectedRouter()
 
       const { url } = await stripe.billingPortal.sessions.create({
         customer: customer.id,
-        return_url: `${host}/settings`,
+        return_url: `${host}/account`,
       });
 
       return { url };

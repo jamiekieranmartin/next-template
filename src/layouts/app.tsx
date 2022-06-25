@@ -87,7 +87,7 @@ export const Auth: React.FC = () => {
                 children: "Home",
               },
               { href: "/invitations", children: "Invitations" },
-              { href: "/settings", children: "Settings" },
+              { href: "/account", children: "Account" },
             ].map(({ href, children }, i) => (
               <Menu.Item key={i}>
                 {({ active }) => (
