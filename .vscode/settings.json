@@ -20,5 +20,13 @@
   "tailwindCSS.emmetCompletions": true,
   "tailwindCSS.validate": true,
   "emmet.showAbbreviationSuggestions": false,
-  "emmet.showExpandedAbbreviation": "never"
+  "emmet.showExpandedAbbreviation": "never",
+
+  "files.exclude": {
+    "**/node_modules": true,
+    "storybook-static": true,
+    ".vercel": true,
+    ".next": true,
+    ".husky": true
+  }
 }
