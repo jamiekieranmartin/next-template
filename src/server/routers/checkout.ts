@@ -6,9 +6,11 @@ import { prisma } from "../../lib/prisma";
 import { stripe } from "../../lib/stripe";
 import { createProtectedRouter } from "../create-protected-router";
 
-const host = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+export const getURL = () => {
+  const url =
+    process.env.URL || process.env.VERCEL_URL || "http://localhost:3000";
+  return url.includes("http") ? url : `https://${url}`;
+};
 
 export const checkoutRouter = createProtectedRouter()
   /**
@@ -87,8 +89,8 @@ export const checkoutRouter = createProtectedRouter()
         subscription_data: {
           trial_from_plan: true,
         },
-        success_url: `${host}/account`,
-        cancel_url: `${host}/account`,
+        success_url: `${getURL()}/account`,
+        cancel_url: `${getURL()}/account`,
       });
 
       return session;
@@ -117,7 +119,7 @@ export const checkoutRouter = createProtectedRouter()
 
       const { url } = await stripe.billingPortal.sessions.create({
         customer: customer.id,
-        return_url: `${host}/account`,
+        return_url: `${getURL()}/account`,
       });
 
       return { url };
