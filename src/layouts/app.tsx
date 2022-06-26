@@ -4,9 +4,8 @@ import { signOut } from "next-auth/react";
 
 import { Menu, Transition } from "@headlessui/react";
 
-import { Avatar, Button, Link, Spinner } from "../components";
+import { Avatar, Button, Link } from "../components";
 import { useAuth } from "../lib/hooks";
-import { trpc } from "../lib/trpc";
 
 export type AppLayoutProps = {};
 
@@ -45,9 +44,6 @@ export const AppLayout: React.FC<PropsWithChildren<AppLayoutProps>> = ({
 export const Auth: React.FC = () => {
   const router = useRouter();
   const { session, signIn } = useAuth();
-  const user = trpc.useQuery(["user.get"], {
-    refetchOnMount: false,
-  });
 
   if (!session.data)
     return (
@@ -64,11 +60,10 @@ export const Auth: React.FC = () => {
 
       <Menu as="div" className="relative inline-block text-left">
         <Menu.Button className="rounded-full">
-          {user.isLoading && <Spinner />}
-
-          {!!user.data && (
-            <Avatar src={user.data.image} name={user.data.name} />
-          )}
+          <Avatar
+            src={session.data.user?.image}
+            name={session.data.user?.name}
+          />
         </Menu.Button>
 
         <Transition
