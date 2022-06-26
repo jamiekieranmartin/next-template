@@ -38,12 +38,23 @@ export default NextAuth({
 
   events: {
     createUser: async ({ user }) => {
+      const { id, email, name } = user;
+      if (!email) return;
+
+      const customer = await prisma.customer.findUnique({
+        where: {
+          email,
+        },
+      });
+
+      if (customer) return;
+
       // Create a stripe customer for the user with their email address
       await stripe.customers.create({
-        name: user.name!,
-        email: user.email!,
+        name: name ?? undefined,
+        email,
         metadata: {
-          user_id: user.id,
+          user_id: id,
         },
       });
     },
