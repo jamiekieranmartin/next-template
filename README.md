@@ -127,3 +127,7 @@ If you're deploying with Vercel, `NEXTAUTH_URL` is only really necessary for loc
 ### `NEXT_PUBLIC_LOGROCKET_ID`
 
 [LogRocket Quickstart](https://docs.logrocket.com/docs/quickstart)
+
+### `URL`
+
+This needs to be set for production to specify your host domain. i.e: `jamiekieranmartin.app`
