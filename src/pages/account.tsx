@@ -19,13 +19,14 @@ const Page: NextLayoutPage = () => {
             </Badge>
           )}
         </h2>
-        <p>
-          {subscription.data
-            ? `Your subscription will renew on ${dayjs(
-                subscription.data.current_period_end
-              ).format("LL")}`
-            : "You have no active subscription"}
-        </p>
+        {!!subscription.data ? (
+          <p>
+            Your subscription will renew on $
+            {dayjs(subscription.data.current_period_end).format("LL")}
+          </p>
+        ) : (
+          <p>You have no active subscription</p>
+        )}
       </Text>
 
       {!!subscription.data && (
