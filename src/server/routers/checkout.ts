@@ -19,8 +19,26 @@ export const checkoutRouter = createProtectedRouter()
   .query("products", {
     async resolve() {
       return await prisma.product.findMany({
-        include: {
-          prices: true,
+        where: {
+          active: true,
+        },
+        select: {
+          name: true,
+          description: true,
+          prices: {
+            where: {
+              active: true,
+            },
+            select: {
+              id: true,
+              unit_amount: true,
+              currency: true,
+              recurring_interval: true,
+            },
+            orderBy: {
+              recurring_interval: "asc",
+            },
+          },
         },
       });
     },
@@ -39,6 +57,10 @@ export const checkoutRouter = createProtectedRouter()
               id: user_id,
             },
           },
+        },
+        select: {
+          status: true,
+          current_period_end: true,
         },
         orderBy: {
           created_at: "desc",
