@@ -1,0 +1,85 @@
+{
+  "_meta": {
+    "template_version": 0
+  },
+  "fixtures": [
+    {
+      "name": "prod_basic",
+      "path": "/v1/products",
+      "method": "post",
+      "params": {
+        "name": "Basic",
+        "description": "The bare minimum to get started"
+      }
+    },
+    {
+      "name": "price_basic_month",
+      "path": "/v1/prices",
+      "method": "post",
+      "params": {
+        "product": "${prod_basic:id}",
+        "currency": "aud",
+        "billing_scheme": "per_unit",
+        "unit_amount": 1000,
+        "recurring": {
+          "interval": "month",
+          "interval_count": 1
+        }
+      }
+    },
+    {
+      "name": "price_basic_year",
+      "path": "/v1/prices",
+      "method": "post",
+      "params": {
+        "product": "${prod_basic:id}",
+        "currency": "aud",
+        "billing_scheme": "per_unit",
+        "unit_amount": 10000,
+        "recurring": {
+          "interval": "year",
+          "interval_count": 1
+        }
+      }
+    },
+    {
+      "name": "prod_fancy",
+      "path": "/v1/products",
+      "method": "post",
+      "params": {
+        "name": "Fancy",
+        "description": "More than you probably need"
+      }
+    },
+    {
+      "name": "price_fancy_month",
+      "path": "/v1/prices",
+      "method": "post",
+      "params": {
+        "product": "${prod_fancy:id}",
+        "currency": "aud",
+        "billing_scheme": "per_unit",
+        "unit_amount": 2000,
+        "recurring": {
+          "interval": "month",
+          "interval_count": 1
+        }
+      }
+    },
+    {
+      "name": "price_fancy_year",
+      "path": "/v1/prices",
+      "method": "post",
+      "params": {
+        "product": "${prod_fancy:id}",
+        "currency": "aud",
+        "billing_scheme": "per_unit",
+        "unit_amount": 20000,
+        "recurring": {
+          "interval": "year",
+          "interval_count": 1
+        }
+      }
+    }
+  ]
+}

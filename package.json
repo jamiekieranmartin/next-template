@@ -14,6 +14,7 @@
     "db:studio": "prisma studio",
     "db:seed": "prisma db seed",
     "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhook",
+    "stripe:push": "stripe fixtures ./fixtures/stripe.json",
     "postinstall": "prisma generate",
     "prepare": "husky install"
   },
