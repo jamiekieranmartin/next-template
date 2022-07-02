@@ -1,4 +1,5 @@
-import { transformer } from "../../utils/trpc";
+import transformer from "superjson";
+
 import { createRouter } from "../create-router";
 
 import { checkoutRouter } from "./checkout";
