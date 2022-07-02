@@ -1,4 +1,4 @@
-import { trpc } from "../trpc";
+import { trpc } from "../utils/trpc";
 
 export type UseMembersProps = {
   slug: string;

@@ -3,11 +3,11 @@ import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useMembers, useSlug } from "../../lib/hooks";
+import { useMembers, useSlug } from "../../hooks";
 import {
   InviteTeamMemberInputType,
   inviteTeamMemberSchema,
-} from "../../lib/schemas";
+} from "../../utils/schemas";
 import { Button } from "../button";
 import { Card } from "../card";
 import { Form } from "../form";

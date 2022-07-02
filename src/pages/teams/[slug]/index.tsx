@@ -1,7 +1,7 @@
 import { Card, Preview, Text } from "../../../components";
+import { useTeam } from "../../../hooks";
 import { TeamLayout } from "../../../layouts";
-import { useTeam } from "../../../lib/hooks";
-import { NextLayoutPage } from "../../../lib/types";
+import { NextLayoutPage } from "../../../utils/types";
 
 const Page: NextLayoutPage = () => {
   const team = useTeam();

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useRouter } from "next/router";
 import { UseQueryResult } from "react-query";
 
-import { InferQueryOutput, trpc } from "../trpc";
+import { InferQueryOutput, trpc } from "../utils/trpc";
 
 export type TeamContextInterface = UseQueryResult<InferQueryOutput<"team.get">>;
 

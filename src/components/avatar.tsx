@@ -1,6 +1,6 @@
 import * as A from "@radix-ui/react-avatar";
 
-import { getInitials } from "../lib/utils";
+import { getInitials } from "../utils/utils";
 
 export type AvatarProps = {
   src?: string | null;

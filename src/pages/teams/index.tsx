@@ -1,7 +1,7 @@
 import { Button, Card, Link, List, Text } from "../../components";
+import { useTeams } from "../../hooks";
 import { AppLayout } from "../../layouts";
-import { useTeams } from "../../lib/hooks";
-import { NextLayoutPage } from "../../lib/types";
+import { NextLayoutPage } from "../../utils/types";
 
 const Page: NextLayoutPage = () => {
   const { teams } = useTeams();

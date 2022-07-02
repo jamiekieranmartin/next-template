@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../db/client";
 
 export const ensureOwner = async (slug: string, user_id: string) => {
   const isOwner = await prisma.teamMember.count({

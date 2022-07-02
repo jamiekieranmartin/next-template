@@ -5,7 +5,7 @@ import { signOut } from "next-auth/react";
 import { Menu, Transition } from "@headlessui/react";
 
 import { Avatar, Button, Link } from "../components";
-import { useAuth } from "../lib/hooks";
+import { useAuth } from "../hooks";
 
 export type AppLayoutProps = {};
 

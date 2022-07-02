@@ -2,8 +2,7 @@ import { z } from "zod";
 
 import { TRPCError } from "@trpc/server";
 
-import { prisma } from "../../lib/prisma";
-import { createTeamSchema, editTeamSchema } from "../../lib/schemas";
+import { createTeamSchema, editTeamSchema } from "../../utils/schemas";
 import { createProtectedRouter } from "../create-protected-router";
 
 import { ensureOwner } from "./utils";
@@ -15,7 +14,7 @@ export const teamRouter = createProtectedRouter()
   .query("list", {
     async resolve({ ctx }) {
       const { user_id } = ctx;
-      return await prisma.team.findMany({
+      return await ctx.prisma.team.findMany({
         where: {
           members: {
             some: {
@@ -37,7 +36,7 @@ export const teamRouter = createProtectedRouter()
     async resolve({ ctx, input }) {
       const { user_id } = ctx;
       const { slug } = input;
-      const team = await prisma.team.findFirst({
+      const team = await ctx.prisma.team.findFirst({
         where: {
           slug,
           members: {
@@ -69,7 +68,7 @@ export const teamRouter = createProtectedRouter()
     async resolve({ ctx, input }) {
       const { user_id } = ctx;
       const { slug } = input;
-      return await prisma.teamMember.findMany({
+      return await ctx.prisma.teamMember.findMany({
         where: {
           team: {
             slug,
@@ -93,7 +92,7 @@ export const teamRouter = createProtectedRouter()
     async resolve({ ctx, input }) {
       const { user_id } = ctx;
       const { name, slug } = input;
-      return await prisma.team.create({
+      return await ctx.prisma.team.create({
         data: {
           name,
           slug,
@@ -119,7 +118,7 @@ export const teamRouter = createProtectedRouter()
       const { id, slug, name } = input;
       await ensureOwner(slug, user_id);
 
-      return await prisma.team.update({
+      return await ctx.prisma.team.update({
         where: {
           id,
         },
@@ -142,7 +141,7 @@ export const teamRouter = createProtectedRouter()
       const { slug } = input;
       await ensureOwner(slug, user_id);
 
-      await prisma.teamMember.deleteMany({
+      await ctx.prisma.teamMember.deleteMany({
         where: {
           team: {
             slug,
@@ -150,7 +149,7 @@ export const teamRouter = createProtectedRouter()
         },
       });
 
-      return await prisma.team.delete({
+      return await ctx.prisma.team.delete({
         where: {
           slug,
         },

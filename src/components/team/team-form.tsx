@@ -4,9 +4,9 @@ import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useTeam } from "../../lib/hooks";
-import { EditTeamInputType, editTeamSchema } from "../../lib/schemas";
-import { trpc } from "../../lib/trpc";
+import { useTeam } from "../../hooks";
+import { EditTeamInputType, editTeamSchema } from "../../utils/schemas";
+import { trpc } from "../../utils/trpc";
 import { Button } from "../button";
 import { Card } from "../card";
 import { Form } from "../form";

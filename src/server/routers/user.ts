@@ -2,7 +2,6 @@ import { z } from "zod";
 
 import { TRPCError } from "@trpc/server";
 
-import { prisma } from "../../lib/prisma";
 import { createProtectedRouter } from "../create-protected-router";
 
 export const userRouter = createProtectedRouter()
@@ -11,7 +10,7 @@ export const userRouter = createProtectedRouter()
    */
   .query("get", {
     async resolve({ ctx }) {
-      const user = await prisma.user.findUnique({
+      const user = await ctx.prisma.user.findUnique({
         where: { id: ctx.user_id },
         select: {
           id: true,
@@ -38,7 +37,7 @@ export const userRouter = createProtectedRouter()
       name: z.string().min(1),
     }),
     resolve: async ({ ctx, input }) => {
-      return await prisma.user.update({
+      return await ctx.prisma.user.update({
         where: { id: ctx.user_id },
         data: {
           name: input.name,
@@ -51,7 +50,7 @@ export const userRouter = createProtectedRouter()
    */
   .query("invitations", {
     resolve: async ({ ctx }) => {
-      return await prisma.teamMember.findMany({
+      return await ctx.prisma.teamMember.findMany({
         where: { user_id: ctx.user_id, accepted: false },
         include: {
           team: {
@@ -71,7 +70,7 @@ export const userRouter = createProtectedRouter()
       team_id: z.string().min(1),
     }),
     resolve: async ({ ctx, input }) => {
-      return await prisma.teamMember.update({
+      return await ctx.prisma.teamMember.update({
         where: {
           user_id_team_id: {
             user_id: ctx.user_id,

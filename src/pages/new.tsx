@@ -6,10 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button, Card, Form, Input, Text } from "../components";
 import { AppLayout } from "../layouts";
-import { CreateTeamInputType, createTeamSchema } from "../lib/schemas";
-import { trpc } from "../lib/trpc";
-import { NextLayoutPage } from "../lib/types";
-import { slugify } from "../lib/utils";
+import { CreateTeamInputType, createTeamSchema } from "../utils/schemas";
+import { trpc } from "../utils/trpc";
+import { NextLayoutPage } from "../utils/types";
+import { slugify } from "../utils/utils";
 
 const Page: NextLayoutPage = () => {
   const router = useRouter();

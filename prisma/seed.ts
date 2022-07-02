@@ -6,7 +6,7 @@ import {
   handleProduct,
   handleSubscription,
   stripe,
-} from "../src/lib/stripe";
+} from "../src/utils/stripe";
 
 const prisma = new PrismaClient();
 

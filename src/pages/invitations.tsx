@@ -1,7 +1,7 @@
 import { Button, Card, List, Text } from "../components";
+import { useInvitations } from "../hooks";
 import { AppLayout } from "../layouts";
-import { useInvitations } from "../lib/hooks";
-import { NextLayoutPage } from "../lib/types";
+import { NextLayoutPage } from "../utils/types";
 
 const Page: NextLayoutPage = () => {
   const { invitations, accept } = useInvitations();

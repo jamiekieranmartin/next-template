@@ -2,8 +2,7 @@ import { z } from "zod";
 
 import { TRPCError } from "@trpc/server";
 
-import { prisma } from "../../lib/prisma";
-import { inviteTeamMemberSchema } from "../../lib/schemas";
+import { inviteTeamMemberSchema } from "../../utils/schemas";
 import { createProtectedRouter } from "../create-protected-router";
 
 import { ensureMember, ensureOwner } from "./utils";
@@ -20,7 +19,7 @@ export const memberRouter = createProtectedRouter()
       const { slug } = input;
       await ensureMember(slug, ctx.user_id);
 
-      return await prisma.teamMember.findMany({
+      return await ctx.prisma.teamMember.findMany({
         where: {
           team: {
             slug,
@@ -49,7 +48,7 @@ export const memberRouter = createProtectedRouter()
       const { slug } = input;
       await ensureMember(slug, ctx.user_id);
 
-      const teamMember = await prisma.teamMember.findFirst({
+      const teamMember = await ctx.prisma.teamMember.findFirst({
         where: {
           team: {
             slug,
@@ -79,7 +78,7 @@ export const memberRouter = createProtectedRouter()
       const { slug } = input;
       await ensureMember(slug, ctx.user_id);
 
-      return await prisma.teamMember.findMany({
+      return await ctx.prisma.teamMember.findMany({
         where: {
           team: {
             slug,
@@ -106,7 +105,7 @@ export const memberRouter = createProtectedRouter()
       const { slug } = input;
       await ensureOwner(slug, ctx.user_id);
 
-      return await prisma.teamMember.create({
+      return await ctx.prisma.teamMember.create({
         data: {
           team: {
             connect: {
@@ -142,7 +141,7 @@ export const memberRouter = createProtectedRouter()
 
       await ensureOwner(slug, ctx.user_id);
 
-      const team = await prisma.team.findUnique({
+      const team = await ctx.prisma.team.findUnique({
         where: {
           slug,
         },
@@ -155,7 +154,7 @@ export const memberRouter = createProtectedRouter()
         });
       }
 
-      return await prisma.teamMember.delete({
+      return await ctx.prisma.teamMember.delete({
         where: {
           user_id_team_id: {
             team_id: team.id,

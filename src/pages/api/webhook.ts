@@ -8,7 +8,7 @@ import {
   handleProduct,
   handleSubscription,
   stripe,
-} from "../../lib/stripe";
+} from "../../utils/stripe";
 
 // Stripe requires the raw body to construct the event.
 export const config = {

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import type { AppProps } from "next/app";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
+import transformer from "superjson";
 
 import { TRPCClientErrorLike } from "@trpc/client";
 import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
@@ -9,10 +10,9 @@ import { withTRPC } from "@trpc/next";
 import type { Maybe } from "@trpc/server";
 
 import { SEO } from "../components";
-import { setupLogRocket } from "../lib/logrocket";
-import { transformer } from "../lib/trpc";
-import { NextLayoutPage } from "../lib/types";
 import type { AppRouter } from "../server/routers/_app";
+import { setupLogRocket } from "../utils/logrocket";
+import { NextLayoutPage } from "../utils/types";
 
 import "../styles/globals.css";
 

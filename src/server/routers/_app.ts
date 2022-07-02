@@ -1,4 +1,4 @@
-import { transformer } from "../../lib/trpc";
+import { transformer } from "../../utils/trpc";
 import { createRouter } from "../create-router";
 
 import { checkoutRouter } from "./checkout";

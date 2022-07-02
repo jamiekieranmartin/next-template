@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 
-import { trpc } from "../trpc";
+import { trpc } from "../utils/trpc";
 
 export const useCheckout = () => {
   const router = useRouter();

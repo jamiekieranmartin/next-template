@@ -1,4 +1,4 @@
-import { trpc } from "../trpc";
+import { trpc } from "../utils/trpc";
 
 export const useInvitations = () => {
   const invitations = trpc.useQuery(["user.invitations"]);

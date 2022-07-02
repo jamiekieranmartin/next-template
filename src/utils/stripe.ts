@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 
-import { prisma } from "./prisma";
+import { prisma } from "../server/db/client";
+
 import { toDateTime } from "./utils";
 
 export const stripe = new Stripe(process.env.STRIPE_KEY!, {

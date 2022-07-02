@@ -2,7 +2,7 @@ import { PropsWithChildren } from "react";
 import { useRouter } from "next/router";
 
 import { Button, Link } from "../components";
-import { useAuth } from "../lib/hooks";
+import { useAuth } from "../hooks";
 
 export type SiteLayoutProps = {};
 

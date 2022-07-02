@@ -2,8 +2,7 @@ import { z } from "zod";
 
 import { TRPCError } from "@trpc/server";
 
-import { prisma } from "../../lib/prisma";
-import { stripe } from "../../lib/stripe";
+import { stripe } from "../../utils/stripe";
 import { createProtectedRouter } from "../create-protected-router";
 
 export const getURL = () => {
@@ -17,8 +16,8 @@ export const checkoutRouter = createProtectedRouter()
    * Get all products
    */
   .query("products", {
-    async resolve() {
-      return await prisma.product.findMany({
+    async resolve({ ctx }) {
+      return await ctx.prisma.product.findMany({
         where: {
           active: true,
         },
@@ -50,7 +49,7 @@ export const checkoutRouter = createProtectedRouter()
     async resolve({ ctx }) {
       const { user_id } = ctx;
 
-      return await prisma.subscription.findFirst({
+      return await ctx.prisma.subscription.findFirst({
         where: {
           customer: {
             user: {
@@ -79,7 +78,7 @@ export const checkoutRouter = createProtectedRouter()
     async resolve({ ctx, input }) {
       const { user_id } = ctx;
 
-      const customer = await prisma.customer.findFirst({
+      const customer = await ctx.prisma.customer.findFirst({
         where: {
           user: {
             id: user_id,
@@ -124,7 +123,7 @@ export const checkoutRouter = createProtectedRouter()
   .mutation("portal", {
     resolve: async ({ ctx }) => {
       const { user_id } = ctx;
-      const customer = await prisma.customer.findFirst({
+      const customer = await ctx.prisma.customer.findFirst({
         where: {
           user: {
             id: user_id,

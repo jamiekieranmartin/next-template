@@ -1,9 +1,9 @@
 import { Badge, Button, Card, List, Text } from "../components";
+import { useCheckout } from "../hooks";
 import { AppLayout } from "../layouts";
-import dayjs from "../lib/dayjs";
-import { useCheckout } from "../lib/hooks";
-import { NextLayoutPage } from "../lib/types";
-import { formatAmount } from "../lib/utils";
+import dayjs from "../utils/dayjs";
+import { NextLayoutPage } from "../utils/types";
+import { formatAmount } from "../utils/utils";
 
 const Page: NextLayoutPage = () => {
   const { products, checkout, subscription, portal } = useCheckout();

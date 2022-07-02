@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 
 import { SignIn } from "../components";
+import { useAuth } from "../hooks";
 import { AppLayout } from "../layouts";
-import { useAuth } from "../lib/hooks";
-import { NextLayoutPage } from "../lib/types";
+import { NextLayoutPage } from "../utils/types";
 
 const Page: NextLayoutPage = () => {
   const router = useRouter();

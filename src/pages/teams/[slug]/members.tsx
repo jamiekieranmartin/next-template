@@ -1,8 +1,8 @@
 import { InvitationsList, TeamMemberForm } from "../../../components";
 import { MembersList } from "../../../components/team/members-list";
+import { useRole, useSlug } from "../../../hooks";
 import { TeamLayout } from "../../../layouts";
-import { useRole, useSlug } from "../../../lib/hooks";
-import { NextLayoutPage } from "../../../lib/types";
+import { NextLayoutPage } from "../../../utils/types";
 
 const Page: NextLayoutPage = () => {
   const slug = useSlug();

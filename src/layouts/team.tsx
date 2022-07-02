@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from "react";
 import { useRouter } from "next/router";
 
 import { Link } from "../components";
-import { TeamProvider } from "../lib/hooks";
+import { TeamProvider } from "../hooks";
 
 import { AppLayout } from "./app";
 

@@ -1,6 +1,6 @@
 import * as Alert from "@radix-ui/react-alert-dialog";
 
-import { useMembers, useRole, useSlug } from "../../lib/hooks";
+import { useMembers, useRole, useSlug } from "../../hooks";
 import { Avatar } from "../avatar";
 import { Button } from "../button";
 import { Card } from "../card";
