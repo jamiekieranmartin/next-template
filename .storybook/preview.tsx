@@ -3,7 +3,7 @@ import { SessionProvider } from "next-auth/react";
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 import { RouterContext } from "next/dist/shared/lib/router-context";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { trpc } from "../src/lib/trpc";
+import { trpc } from "../src/utils/trpc";
 
 import "../src/styles/globals.css";
 import { Session } from "next-auth";
