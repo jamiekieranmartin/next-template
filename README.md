@@ -20,7 +20,6 @@ A highly opinionated [Next.js](https://nextjs.org/) template to hit the ground r
 ## Demo
 
 - https://jamiekieranmartin.app/
-- https://storybook.jamiekieranmartin.app/
 
 ## Prerequisites
 
