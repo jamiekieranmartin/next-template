@@ -45,7 +45,14 @@ export const Auth: React.FC = () => {
 
   if (!session.data)
     return (
-      <Button size="sm" onClick={() => signIn("github")}>
+      <Button
+        size="sm"
+        onClick={() =>
+          signIn("github", {
+            callbackUrl: "/teams",
+          })
+        }
+      >
         Sign in
       </Button>
     );

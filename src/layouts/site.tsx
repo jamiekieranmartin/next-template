@@ -22,7 +22,14 @@ export const SiteLayout: React.FC<PropsWithChildren<SiteLayoutProps>> = ({
         </div>
 
         {session.status === "unauthenticated" && (
-          <Button size="sm" onClick={() => signIn("github")}>
+          <Button
+            size="sm"
+            onClick={() =>
+              signIn("github", {
+                callbackUrl: "/teams",
+              })
+            }
+          >
             Sign in
           </Button>
         )}
