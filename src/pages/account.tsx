@@ -1,12 +1,28 @@
-import { Badge, Button, Card, List, Text } from "../components";
-import { useCheckout } from "../hooks";
-import { AppLayout } from "../layouts";
-import dayjs from "../utils/dayjs";
-import { NextLayoutPage } from "../utils/types";
-import { formatAmount } from "../utils/utils";
+import { useRouter } from "next/router";
+
+import { Badge, Button, Card, List, Text } from "@/components";
+import { AppLayout } from "@/layouts";
+import dayjs from "@/utils/dayjs";
+import { trpc } from "@/utils/trpc";
+import { NextLayoutPage } from "@/utils/types";
+import { formatAmount } from "@/utils/utils";
 
 const Page: NextLayoutPage = () => {
-  const { products, checkout, subscription, portal } = useCheckout();
+  const router = useRouter();
+
+  const products = trpc.useQuery(["checkout.products"]);
+  const subscription = trpc.useQuery(["checkout.subscription"]);
+
+  const portal = trpc.useMutation(["checkout.portal"], {
+    async onSuccess({ url }) {
+      router.push(url);
+    },
+  });
+  const checkout = trpc.useMutation(["checkout.create"], {
+    async onSuccess({ url }) {
+      if (url) router.push(url);
+    },
+  });
 
   return (
     <Card isLoading={subscription.isLoading}>

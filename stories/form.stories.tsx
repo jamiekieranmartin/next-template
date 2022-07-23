@@ -1,5 +1,5 @@
-import { Button, Card, Input } from "../../src/components";
-import { Form, FormProps } from "../../src/components/form";
+import { Button, Card, Input } from "@/components";
+import { Form, FormProps } from "@/components/form";
 
 export default {
   title: "Components/Form",

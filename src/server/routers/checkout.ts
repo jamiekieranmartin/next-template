@@ -1,8 +1,8 @@
 import { z } from "zod";
 
+import { stripe } from "@/utils/stripe";
 import { TRPCError } from "@trpc/server";
 
-import { stripe } from "../../utils/stripe";
 import { createProtectedRouter } from "../create-protected-router";
 
 export const getURL = () => {

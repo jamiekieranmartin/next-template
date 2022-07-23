@@ -1,8 +1,8 @@
 import { z } from "zod";
 
+import { createTeamSchema, editTeamSchema } from "@/utils/schemas";
 import { TRPCError } from "@trpc/server";
 
-import { createTeamSchema, editTeamSchema } from "../../utils/schemas";
 import { createProtectedRouter } from "../create-protected-router";
 
 import { ensureOwner } from "./utils";

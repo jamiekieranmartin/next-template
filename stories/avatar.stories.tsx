@@ -1,4 +1,4 @@
-import { Avatar, AvatarProps } from "../../src/components/avatar";
+import { Avatar, AvatarProps } from "@/components/avatar";
 
 export default {
   title: "Components/Avatar",

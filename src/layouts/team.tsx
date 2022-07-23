@@ -1,8 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import { useRouter } from "next/router";
 
-import { Link } from "../components";
-import { TeamProvider } from "../hooks";
+import { Link } from "@/components";
 
 import { AppLayout } from "./app";
 
@@ -22,7 +21,7 @@ export const TeamLayout: React.FC<PropsWithChildren<TeamLayoutProps>> = ({
         <Link href={`/teams/${slug}/settings`}>Settings</Link>
       </div>
 
-      <TeamProvider slug={slug}>{children}</TeamProvider>
+      {children}
     </AppLayout>
   );
 };

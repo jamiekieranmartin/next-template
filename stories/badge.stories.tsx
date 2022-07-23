@@ -1,4 +1,4 @@
-import { Badge, BadgeProps } from "../../src/components/badge";
+import { Badge, BadgeProps } from "@/components/badge";
 
 export default {
   title: "Components/Badge",

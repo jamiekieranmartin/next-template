@@ -1,5 +1,5 @@
-import { Card } from "../../src/components";
-import { Preview, PreviewProps } from "../../src/components/preview";
+import { Card } from "@/components";
+import { Preview, PreviewProps } from "@/components/preview";
 
 export default {
   title: "Components/Preview",

@@ -1,4 +1,4 @@
-import { SignIn, SignInProps } from "../../src/components/sign-in";
+import { SignIn, SignInProps } from "@/components/sign-in";
 
 export default {
   title: "Components/Auth/SignIn",

@@ -11,5 +11,4 @@ export * from "./preview";
 export * from "./seo";
 export * from "./sign-in";
 export * from "./spinner";
-export * from "./team";
 export * from "./text";

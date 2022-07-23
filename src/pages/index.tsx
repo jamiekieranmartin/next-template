@@ -1,6 +1,6 @@
-import { Card, Text } from "../components";
-import { SiteLayout } from "../layouts";
-import { NextLayoutPage } from "../utils/types";
+import { Card, Text } from "@/components";
+import { SiteLayout } from "@/layouts";
+import { NextLayoutPage } from "@/utils/types";
 
 const Page: NextLayoutPage = () => {
   return (

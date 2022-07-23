@@ -1,4 +1,4 @@
-import { Text, TextProps } from "../../src/components/text";
+import { Text, TextProps } from "@/components/text";
 
 export default {
   title: "Components/Text",

@@ -1,8 +1,8 @@
 import { PropsWithChildren } from "react";
 import { useRouter } from "next/router";
+import { signIn, signOut, useSession } from "next-auth/react";
 
-import { Button, Link } from "../components";
-import { useAuth } from "../hooks";
+import { Button, Link } from "@/components";
 
 export type SiteLayoutProps = {};
 
@@ -10,7 +10,7 @@ export const SiteLayout: React.FC<PropsWithChildren<SiteLayoutProps>> = ({
   children,
 }) => {
   const router = useRouter();
-  const { session, signIn, signOut } = useAuth();
+  const session = useSession();
 
   return (
     <>
@@ -22,7 +22,7 @@ export const SiteLayout: React.FC<PropsWithChildren<SiteLayoutProps>> = ({
         </div>
 
         {session.status === "unauthenticated" && (
-          <Button size="sm" onClick={signIn}>
+          <Button size="sm" onClick={() => signIn("github")}>
             Sign in
           </Button>
         )}

@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 
-import { prisma } from "../server/db/client";
+import { prisma } from "@/server/db/client";
 
 import { toDateTime } from "./utils";
 

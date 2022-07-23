@@ -1,10 +1,10 @@
-import { Button, Card, Link, List, Text } from "../../components";
-import { useTeams } from "../../hooks";
-import { AppLayout } from "../../layouts";
-import { NextLayoutPage } from "../../utils/types";
+import { Button, Card, Link, List, Text } from "@/components";
+import { AppLayout } from "@/layouts";
+import { trpc } from "@/utils/trpc";
+import { NextLayoutPage } from "@/utils/types";
 
 const Page: NextLayoutPage = () => {
-  const { teams } = useTeams();
+  const teams = trpc.useQuery(["team.list"]);
 
   return (
     <Card isLoading={teams.isLoading}>

@@ -2,14 +2,13 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
+import { Button, Card, Form, Input, Text } from "@/components";
+import { AppLayout } from "@/layouts";
+import { CreateTeamInputType, createTeamSchema } from "@/utils/schemas";
+import { trpc } from "@/utils/trpc";
+import { NextLayoutPage } from "@/utils/types";
+import { slugify } from "@/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { Button, Card, Form, Input, Text } from "../components";
-import { AppLayout } from "../layouts";
-import { CreateTeamInputType, createTeamSchema } from "../utils/schemas";
-import { trpc } from "../utils/trpc";
-import { NextLayoutPage } from "../utils/types";
-import { slugify } from "../utils/utils";
 
 const Page: NextLayoutPage = () => {
   const router = useRouter();

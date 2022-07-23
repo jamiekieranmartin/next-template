@@ -1,11 +1,9 @@
 import { Fragment, PropsWithChildren } from "react";
 import { useRouter } from "next/router";
-import { signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
+import { Avatar, Button, Link } from "@/components";
 import { Menu, Transition } from "@headlessui/react";
-
-import { Avatar, Button, Link } from "../components";
-import { useAuth } from "../hooks";
 
 export type AppLayoutProps = {};
 
@@ -43,11 +41,11 @@ export const AppLayout: React.FC<PropsWithChildren<AppLayoutProps>> = ({
 
 export const Auth: React.FC = () => {
   const router = useRouter();
-  const { session, signIn } = useAuth();
+  const session = useSession();
 
   if (!session.data)
     return (
-      <Button size="sm" onClick={signIn}>
+      <Button size="sm" onClick={() => signIn("github")}>
         Sign in
       </Button>
     );

@@ -14,7 +14,6 @@
     "db:studio": "prisma studio",
     "db:seed": "prisma db seed",
     "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhook",
-    "stripe:push": "stripe fixtures ./fixtures/stripe.json",
     "postinstall": "prisma generate",
     "prepare": "husky install"
   },
@@ -66,7 +65,6 @@
     "eslint-config-next": "12.1.6",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-storybook": "^0.5.13",
     "husky": "^8.0.0",
     "postcss": "^8.4.14",

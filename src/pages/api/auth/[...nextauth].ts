@@ -1,10 +1,9 @@
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 
+import { prisma } from "@/server/db/client";
+import { stripe } from "@/utils/stripe";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-
-import { prisma } from "../../../server/db/client";
-import { stripe } from "../../../utils/stripe";
 
 export default NextAuth({
   debug: process.env.NODE_ENV === "development",

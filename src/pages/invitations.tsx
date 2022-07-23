@@ -1,10 +1,18 @@
-import { Button, Card, List, Text } from "../components";
-import { useInvitations } from "../hooks";
-import { AppLayout } from "../layouts";
-import { NextLayoutPage } from "../utils/types";
+import { Button, Card, List, Text } from "@/components";
+import { AppLayout } from "@/layouts";
+import { trpc } from "@/utils/trpc";
+import { NextLayoutPage } from "@/utils/types";
 
 const Page: NextLayoutPage = () => {
-  const { invitations, accept } = useInvitations();
+  const invitations = trpc.useQuery(["user.invitations"]);
+
+  const utils = trpc.useContext();
+  const accept = trpc.useMutation(["user.accept"], {
+    async onSuccess() {
+      await utils.invalidateQueries(["user.invitations"]);
+      await utils.invalidateQueries(["team.list"]);
+    },
+  });
 
   return (
     <Card isLoading={invitations.isLoading}>

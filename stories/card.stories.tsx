@@ -1,4 +1,4 @@
-import { Card, CardProps } from "../../src/components/card";
+import { Card, CardProps } from "@/components/card";
 
 export default {
   title: "Components/Card",

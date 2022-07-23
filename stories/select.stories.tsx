@@ -1,4 +1,4 @@
-import { Select, SelectProps } from "../../src/components/select";
+import { Select, SelectProps } from "@/components/select";
 
 export default {
   title: "Components/Select",

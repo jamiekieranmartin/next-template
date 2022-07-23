@@ -1,5 +1,5 @@
-import { Button, Card } from "../../src/components";
-import { List, ListProps } from "../../src/components/list";
+import { Button, Card } from "@/components";
+import { List, ListProps } from "@/components/list";
 
 export default {
   title: "Components/List",
